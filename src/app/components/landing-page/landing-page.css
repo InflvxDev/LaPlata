@@ -873,6 +873,16 @@ html {
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  text-decoration: none;
+}
+
+.open-source-badge:visited {
+  color: #B8860B;
+}
+
+.open-source-badge:focus {
+  outline: 2px solid rgba(255, 215, 0, 0.5);
+  outline-offset: 2px;
 }
 
 .open-source-badge::before {
@@ -895,6 +905,8 @@ html {
   border-color: rgba(255, 215, 0, 0.5);
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(255, 215, 0, 0.2);
+  color: #B8860B;
+  text-decoration: none;
 }
 
 .open-source-icon {
