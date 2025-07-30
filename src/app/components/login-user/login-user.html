@@ -1,1 +1,119 @@
-<p>login-user works!</p>
+<div class="login-container">
+  <div class="login-background-pattern"></div>
+  <!-- Botón de volver -->
+  <button class="back-button" routerLink="/">
+    <i class="material-icons">arrow_back</i>
+    <span>Volver al inicio</span>
+  </button>
+
+  <!-- Contenido principal -->
+  <main class="login-main">
+    <div class="login-card">
+      <!-- Logo y bienvenida -->
+      <div class="welcome-section">
+        <div class="logo-section">
+          <div class="logo-circle">
+            <i class="material-icons">attach_money</i>
+          </div>
+        </div>
+        <h1 class="welcome-title">Bienvenido a LaPlata</h1>
+        <p class="welcome-subtitle">Inicia sesión para acceder a tu gestor financiero</p>
+      </div>
+
+      <!-- Formulario -->
+      <form class="elegant-form" (ngSubmit)="onSubmit()" #loginForm="ngForm">
+        <!-- Campo de email -->
+        <div class="form-field">
+          <label class="field-label">Correo electrónico</label>
+          <div class="input-wrapper">
+            <i class="material-icons input-icon">email</i>
+            <input 
+              type="email" 
+              class="elegant-input" 
+              placeholder="tu@email.com"
+              [(ngModel)]="email"
+              name="email"
+              required
+              #emailInput="ngModel">
+          </div>
+          <div class="field-error" *ngIf="emailInput.invalid && emailInput.touched">
+            <span>Por favor ingresa un email válido</span>
+          </div>
+        </div>
+
+        <!-- Campo de contraseña -->
+        <div class="form-field">
+          <label class="field-label">Contraseña</label>
+          <div class="input-wrapper">
+            <i class="material-icons input-icon">lock</i>
+            <input 
+              [type]="showPassword ? 'text' : 'password'" 
+              class="elegant-input" 
+              placeholder="••••••"
+              [(ngModel)]="password"
+              name="password"
+              required
+              minlength="6"
+              #passwordInput="ngModel">
+            <button 
+              type="button" 
+              class="password-toggle" 
+              (click)="togglePasswordVisibility()">
+              <i class="material-icons">{{ showPassword ? 'visibility_off' : 'visibility' }}</i>
+            </button>
+          </div>
+          <div class="field-error" *ngIf="passwordInput.invalid && passwordInput.touched">
+            <span>La contraseña debe tener al menos 6 caracteres</span>
+          </div>
+        </div>
+
+        <!-- Opciones -->
+        <div class="form-options">
+          <label class="remember-checkbox">
+            <input type="checkbox" [(ngModel)]="rememberMe" name="rememberMe">
+            <span class="checkmark"></span>
+            <span class="checkbox-text">Recordarme</span>
+          </label>
+          <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
+        </div>
+
+        <!-- Botón de login -->
+        <button 
+          type="submit" 
+          class="login-btn" 
+          [disabled]="!isValidForm() || isLoading"
+          [class.loading]="isLoading">
+          <span *ngIf="!isLoading">Iniciar Sesión</span>
+          <span *ngIf="isLoading">Iniciando sesión...</span>
+          <i class="material-icons btn-icon" *ngIf="!isLoading">arrow_forward</i>
+          <i class="material-icons btn-icon loading-spinner" *ngIf="isLoading">refresh</i>
+        </button>
+      </form>
+
+      <!-- Divider -->
+      <div class="divider">
+        <span class="divider-text">O CONTINÚA CON</span>
+      </div>
+
+      <!-- Botones sociales -->
+      <div class="social-buttons">
+        <button class="social-btn google-btn" (click)="loginWithGoogle()">
+          <i class="material-icons">account_circle</i>
+          <span>Google</span>
+        </button>
+        <button class="social-btn apple-btn" (click)="loginWithApple()">
+          <i class="material-icons">phone_iphone</i>
+          <span>Apple</span>
+        </button>
+      </div>
+
+      <!-- Footer -->
+      <div class="form-footer">
+        <p class="signup-text">
+          ¿No tienes una cuenta? 
+          <a href="#" class="signup-link">Regístrate gratis</a>
+        </p>
+      </div>
+    </div>
+  </main>
+</div>
