@@ -1,0 +1,533 @@
+<div class="landing-container-v3">
+  <!-- Header V3 - Diseño profesional y elegante -->
+  <header class="header-v3">
+    <div class="header-background-blur"></div>
+    <div class="header-content-v3">
+      <div class="logo-v3" (click)="scrollToTop()" style="cursor: pointer;">
+        <div class="logo-container">
+          <img src="/assets/img/logo.png" alt="La Plata Logo" class="logo-image-v3">
+          <div class="logo-glow"></div>
+        </div>
+        <div class="logo-text-container">
+          <span class="logo-text-v3">LaPlata</span>
+          <span class="logo-tagline">Finanzas Inteligentes</span>
+        </div>
+      </div>
+      <nav class="nav-menu-v3">
+        <a href="#caracteristicas" class="nav-link-v3">
+          <span class="nav-text">Características</span>
+          <span class="nav-indicator"></span>
+        </a>
+        <a href="#sobre-nosotros" class="nav-link-v3">
+          <span class="nav-text">Sobre Nosotros</span>
+          <span class="nav-indicator"></span>
+        </a>
+        <a href="#preguntas" class="nav-link-v3">
+          <span class="nav-text">Preguntas</span>
+          <span class="nav-indicator"></span>
+        </a>
+      </nav>
+      <div class="header-actions-v3">
+        <button class="btn-login-v3">
+          <mat-icon class="btn-icon">person</mat-icon>
+          <span>Iniciar Sesión</span>
+        </button>
+        <button class="btn-register-v3">
+          <span>Registrarse</span>
+          <mat-icon class="btn-arrow">arrow_forward</mat-icon>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section V3 - Diseño profesional y elegante -->
+  <section class="hero-v3">
+    <div class="hero-background-pattern"></div>
+    <div class="hero-content-v3">
+      <div class="hero-text-v3">
+        <div class="hero-badge-v3">
+          <mat-icon class="badge-icon">star</mat-icon>
+          <span class="badge-text">Tu gestor financiero personal</span>
+        </div>
+        <div class="open-source-badge">
+          <mat-icon class="open-source-icon">lock_open</mat-icon>
+          <span class="open-source-text">Proyecto Open Source</span>
+          <span class="open-source-link">Ver en GitHub →</span>
+        </div>
+        <h1 class="hero-title-v3">
+          Controla tu dinero con 
+          <span class="title-highlight">LaPlata</span>
+        </h1>
+        <p class="hero-subtitle-v3">
+          La plataforma más intuitiva para gestionar tus finanzas personales de forma manual. 
+          Registra tus cuentas, controla tus gastos y alcanza tus metas financieras sin conexiones bancarias.
+        </p>
+        <div class="hero-features-list">
+          <div class="feature-item">
+            <mat-icon class="feature-icon">create</mat-icon>
+            <span>Gestión 100% manual</span>
+          </div>
+          <div class="feature-item">
+            <mat-icon class="feature-icon">security</mat-icon>
+            <span>Sin conexiones bancarias</span>
+          </div>
+        </div>
+        <div class="hero-buttons-v3">
+          <button class="btn-primary-v3">
+            <span>Comenzar Gratis</span>
+            <mat-icon class="btn-arrow">arrow_forward</mat-icon>
+          </button>
+          <button class="btn-secondary-v3">
+            <mat-icon class="play-icon">play_arrow</mat-icon>
+            <span>Ver Demo</span>
+          </button>
+        </div>
+      </div>
+      <div class="hero-visual-v3">
+        <div class="dashboard-preview">
+          <div class="dashboard-header">
+            <div class="dashboard-nav">
+              <div class="nav-dot active"></div>
+              <div class="nav-dot"></div>
+              <div class="nav-dot"></div>
+            </div>
+            <div class="dashboard-title">Dashboard Financiero</div>
+          </div>
+          <div class="dashboard-content">
+            <div class="balance-card-main">
+              <div class="balance-header">
+                <span class="balance-label">Balance Total</span>
+                <span class="balance-trend">↗ +12.5%</span>
+              </div>
+              <div class="balance-amount">$25,847.50</div>
+              <div class="balance-subtitle">Comparado con el mes anterior</div>
+            </div>
+            <div class="stats-grid">
+              <div class="stat-card income">
+                <mat-icon class="stat-icon">trending_up</mat-icon>
+                <div class="stat-info">
+                  <div class="stat-amount">$3,200</div>
+                  <div class="stat-label">Ingresos</div>
+                </div>
+              </div>
+              <div class="stat-card expense">
+                <mat-icon class="stat-icon">trending_down</mat-icon>
+                <div class="stat-info">
+                  <div class="stat-amount">$1,850</div>
+                  <div class="stat-label">Gastos</div>
+                </div>
+              </div>
+            </div>
+            <div class="chart-preview">
+              <div class="chart-bars">
+                <div class="bar" style="height: 60%"></div>
+                <div class="bar" style="height: 80%"></div>
+                <div class="bar" style="height: 45%"></div>
+                <div class="bar" style="height: 90%"></div>
+                <div class="bar" style="height: 70%"></div>
+                <div class="bar" style="height: 95%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="floating-elements">
+          <div class="floating-card card-1">
+            <mat-icon class="card-icon">savings</mat-icon>
+            <div class="card-text">Ahorro automático</div>
+          </div>
+          <div class="floating-card card-2">
+            <mat-icon class="card-icon">flag</mat-icon>
+            <div class="card-text">Metas alcanzadas</div>
+          </div>
+          <div class="floating-card card-3">
+            <mat-icon class="card-icon">notifications</mat-icon>
+            <div class="card-text">Alertas inteligentes</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section V3 - Diseño Elegante y Profesional -->
+  <section class="features-v3" id="caracteristicas">
+    <div class="features-background-pattern"></div>
+    <div class="features-content-v3">
+      <!-- Header de la sección -->
+      <div class="features-header-v3">
+        <div class="features-badge-v3">
+          <mat-icon class="features-badge-icon">whatshot</mat-icon>
+          <span class="features-badge-text">Características Principales</span>
+        </div>
+        <h2 class="features-title-v3">¿Por qué elegir <span class="title-highlight">LaPlata</span>?</h2>
+        <p class="features-subtitle-v3">
+          Gestión manual y control total de tus finanzas personales. 
+          <br>Sin conexiones bancarias, sin riesgos, solo tu control.
+        </p>
+      </div>
+      
+      <!-- Grid principal de características -->
+      <div class="features-grid-v3">
+        <div class="feature-card-v3 feature-card-primary">
+          <div class="feature-card-header">
+            <div class="feature-icon-container">
+              <mat-icon class="feature-icon-v3">account_balance_wallet</mat-icon>
+            </div>
+            <div class="feature-card-badge">Manual</div>
+          </div>
+          <div class="feature-card-content">
+            <h3 class="feature-title-v3">Gestión Manual</h3>
+            <p class="feature-description-v3">
+              Tú decides qué agregar. Registra tus cuentas bancarias, efectivo y cualquier fuente de dinero de forma manual y segura.
+            </p>
+            <ul class="feature-benefits">
+              <li><mat-icon>check_circle</mat-icon> Control total de datos</li>
+              <li><mat-icon>check_circle</mat-icon> Sin conexiones automáticas</li>
+              <li><mat-icon>check_circle</mat-icon> Máxima seguridad</li>
+            </ul>
+          </div>
+          <div class="feature-card-footer">
+            <button class="feature-btn-v3">
+              <span>Explorar</span>
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </div>
+        </div>
+        
+        <div class="feature-card-v3 feature-card-secondary">
+          <div class="feature-card-header">
+            <div class="feature-icon-container">
+              <mat-icon class="feature-icon-v3">analytics</mat-icon>
+            </div>
+            <div class="feature-card-badge">Inteligente</div>
+          </div>
+          <div class="feature-card-content">
+            <h3 class="feature-title-v3">Control Total</h3>
+            <p class="feature-description-v3">
+              Registra tus ingresos y gastos cuando quieras. Sin conexiones automáticas, sin sorpresas, solo tu control.
+            </p>
+            <ul class="feature-benefits">
+              <li><mat-icon>check_circle</mat-icon> Reportes detallados</li>
+              <li><mat-icon>check_circle</mat-icon> Análisis de tendencias</li>
+              <li><mat-icon>check_circle</mat-icon> Metas personalizadas</li>
+            </ul>
+          </div>
+          <div class="feature-card-footer">
+            <button class="feature-btn-v3">
+              <span>Descubrir</span>
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </div>
+        </div>
+        
+        <div class="feature-card-v3 feature-card-accent">
+          <div class="feature-card-header">
+            <div class="feature-icon-container">
+              <mat-icon class="feature-icon-v3">security</mat-icon>
+            </div>
+            <div class="feature-card-badge">Privado</div>
+          </div>
+          <div class="feature-card-content">
+            <h3 class="feature-title-v3">Privacidad Total</h3>
+            <p class="feature-description-v3">
+              Sin conexiones bancarias. Tus datos financieros permanecen privados y bajo tu control absoluto.
+            </p>
+            <ul class="feature-benefits">
+              <li><mat-icon>check_circle</mat-icon> Datos locales</li>
+              <li><mat-icon>check_circle</mat-icon> Sin terceros</li>
+              <li><mat-icon>check_circle</mat-icon> Open Source</li>
+            </ul>
+          </div>
+          <div class="feature-card-footer">
+            <button class="feature-btn-v3">
+              <span>Conocer más</span>
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección de proceso paso a paso -->
+      <div class="process-section-v3">
+        <div class="process-header">
+          <h3 class="process-title">¿Cómo funciona <span class="title-highlight">LaPlata</span>?</h3>
+          <p class="process-subtitle">Cuatro pasos simples para tomar control de tus finanzas</p>
+        </div>
+        
+        <div class="process-grid-v3">
+          <div class="process-step-v3">
+            <div class="step-number">01</div>
+            <div class="step-icon-container">
+              <mat-icon class="step-icon">add_circle</mat-icon>
+            </div>
+            <div class="step-content">
+              <h4 class="step-title">Agrega tus Cuentas</h4>
+              <p class="step-description">
+                Registra manualmente tus cuentas bancarias, efectivo, tarjetas y cualquier lugar donde tengas dinero
+              </p>
+            </div>
+            <div class="step-connector"></div>
+          </div>
+          
+          <div class="process-step-v3">
+            <div class="step-number">02</div>
+            <div class="step-icon-container">
+              <mat-icon class="step-icon">input</mat-icon>
+            </div>
+            <div class="step-content">
+              <h4 class="step-title">Registra Ingresos</h4>
+              <p class="step-description">
+                Anota tus salarios, ventas, regalos o cualquier dinero que recibas en las cuentas que elijas
+              </p>
+            </div>
+            <div class="step-connector"></div>
+          </div>
+          
+          <div class="process-step-v3">
+            <div class="step-number">03</div>
+            <div class="step-icon-container">
+              <mat-icon class="step-icon">output</mat-icon>
+            </div>
+            <div class="step-content">
+              <h4 class="step-title">Controla Gastos</h4>
+              <p class="step-description">
+                Registra tus compras, pagos y gastos para saber exactamente en qué se va tu dinero
+              </p>
+            </div>
+            <div class="step-connector"></div>
+          </div>
+          
+          <div class="process-step-v3">
+            <div class="step-number">04</div>
+            <div class="step-icon-container">
+              <mat-icon class="step-icon">insights</mat-icon>
+            </div>
+            <div class="step-content">
+              <h4 class="step-title">Visualiza tu Progreso</h4>
+              <p class="step-description">
+                Obtén reportes claros y gráficos que te ayuden a entender tus hábitos financieros
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección de estadísticas -->
+      <div class="stats-section-v3">
+        <div class="stats-grid-v3">
+          <div class="stat-item-v3">
+            <div class="stat-number">100%</div>
+            <div class="stat-label">Control Manual</div>
+            <div class="stat-description">Sin conexiones automáticas</div>
+          </div>
+          <div class="stat-item-v3">
+            <div class="stat-number">0</div>
+            <div class="stat-label">Conexiones Bancarias</div>
+            <div class="stat-description">Máxima privacidad</div>
+          </div>
+          <div class="stat-item-v3">
+            <div class="stat-number">∞</div>
+            <div class="stat-label">Cuentas Soportadas</div>
+            <div class="stat-description">Agrega las que necesites</div>
+          </div>
+          <div class="stat-item-v3">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">Disponibilidad</div>
+            <div class="stat-description">Siempre accesible</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About & Contact Section - Sobre Nosotros y Contacto -->
+  <section class="about-contact-section" id="sobre-nosotros">
+    <div class="about-contact-background"></div>
+    <div class="about-contact-content">
+      <!-- Header de la sección -->
+      <div class="about-contact-header">
+        <div class="section-badge">
+          <mat-icon class="badge-icon">person</mat-icon>
+          <span class="badge-text">Sobre Nosotros & Contacto</span>
+        </div>
+        <h2 class="about-contact-title">Conoce al creador de <span class="title-highlight">LaPlata</span></h2>
+        <p class="about-contact-subtitle">
+          Un proyecto personal desarrollado con pasión por las finanzas personales y la tecnología
+        </p>
+      </div>
+
+      <!-- Contenido principal -->
+      <div class="about-contact-grid">
+        <!-- Información personal -->
+        <div class="about-card">
+          <div class="about-card-header">
+            <div class="profile-image-container">
+              <div class="profile-image">
+                <mat-icon class="profile-icon">account_circle</mat-icon>
+              </div>
+              <div class="profile-status">
+                <div class="status-dot"></div>
+                <span class="status-text">Disponible</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="about-card-content">
+            <h3 class="developer-name">Sebastián Ochoa Rangel</h3>
+            <p class="developer-alias">InflvxDev</p>
+            <p class="developer-description">
+              Ingeniero de Sistemas enfocado en desarrollo de software y análisis de datos. 
+              Apasionado por crear soluciones que simplifiquen la vida financiera de las personas.
+            </p>
+            
+            <div class="tech-stack">
+              <h4 class="tech-title">Stack Tecnológico</h4>
+              <div class="tech-tags">
+                <span class="tech-tag">Angular</span>
+                <span class="tech-tag">TypeScript</span>
+                <span class="tech-tag">HTML/CSS</span>
+                <span class="tech-tag">JavaScript</span>
+                <span class="tech-tag">Astro</span>
+                <span class="tech-tag">React</span>
+                <span class="tech-tag">SQL</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Información de contacto -->
+        <div class="contact-card">
+          <div class="contact-card-header">
+            <h3 class="contact-title">¿Tienes alguna pregunta?</h3>
+            <p class="contact-subtitle">
+              Estoy aquí para ayudarte. Contáctame a través de cualquiera de estos canales
+            </p>
+          </div>
+          
+          <div class="contact-methods">
+            <a href="https://github.com/InflvxDev" target="_blank" class="contact-method github">
+              <div class="contact-icon-container">
+                <mat-icon class="contact-icon">code</mat-icon>
+              </div>
+              <div class="contact-info">
+                <h4 class="contact-method-title">GitHub</h4>
+                <p class="contact-method-description">Revisa el código fuente y contribuye</p>
+                <span class="contact-link">github.com/InflvxDev</span>
+              </div>
+              <mat-icon class="contact-arrow">arrow_outward</mat-icon>
+            </a>
+            
+            <a href="https://www.linkedin.com/in/seochoar/" target="_blank" class="contact-method linkedin">
+              <div class="contact-icon-container">
+                <mat-icon class="contact-icon">business</mat-icon>
+              </div>
+              <div class="contact-info">
+                <h4 class="contact-method-title">LinkedIn</h4>
+                <p class="contact-method-description">Conectemos profesionalmente</p>
+                <span class="contact-link">linkedin.com/in/seochoar</span>
+              </div>
+              <mat-icon class="contact-arrow">arrow_outward</mat-icon>
+            </a>
+          </div>
+          
+          <div class="contact-cta">
+            <div class="contact-cta-content">
+              <h4 class="contact-cta-title">¿Colaboración o consultoría?</h4>
+              <p class="contact-cta-description">
+                Estoy abierto a nuevos proyectos y oportunidades de colaboración
+              </p>
+            </div>
+            <button class="contact-cta-btn">
+              <span>Enviar mensaje</span>
+              <mat-icon>send</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FAQ Section - Preguntas Frecuentes -->
+  <section class="faq-section" id="preguntas">
+    <div class="faq-background"></div>
+    <div class="faq-content">
+      <!-- Header de la sección -->
+      <div class="faq-header">
+        <div class="section-badge">
+          <mat-icon class="badge-icon">help_outline</mat-icon>
+          <span class="badge-text">Preguntas Frecuentes</span>
+        </div>
+        <h2 class="faq-title">Preguntas que nos hacen <span class="title-highlight">frecuentemente</span></h2>
+        <p class="faq-subtitle">
+          Encuentra respuestas a las dudas más comunes sobre LaPlata y cómo puede ayudarte
+        </p>
+      </div>
+
+      <!-- Lista de FAQ -->
+      <div class="faq-list">
+        <div class="faq-item" *ngFor="let faq of faqs" [class.active]="faq.isOpen">
+          <div class="faq-question" (click)="toggleFaq(faq.id)">
+            <h3 class="faq-question-text">{{ faq.question }}</h3>
+            <div class="faq-toggle-icon">
+              <mat-icon [class.rotated]="faq.isOpen">expand_more</mat-icon>
+            </div>
+          </div>
+          <div class="faq-answer" [class.expanded]="faq.isOpen">
+            <div class="faq-answer-content">
+              <p>{{ faq.answer }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer Section - Sección de pie de página completa -->
+  <footer class="footer-section">
+    <div class="footer-background"></div>
+    
+    <!-- CTA Principal -->
+    <div class="footer-cta">
+      <div class="footer-cta-content">
+        <div class="footer-cta-text">
+          <h2 class="footer-cta-title">¡Empieza a transformar tus finanzas hoy!</h2>
+          <p class="footer-cta-subtitle">Únete a miles de usuarios que ya controlan su dinero con LaPlata</p>
+        </div>
+        <div class="footer-cta-actions">
+          <button class="footer-btn-primary">
+            <span>Crear Cuenta Gratis</span>
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+          <button class="footer-btn-secondary">
+            <span>Ver Demo</span>
+            <mat-icon>play_circle</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+ 
+    <!-- Footer Bottom -->
+    <div class="footer-bottom">
+      <div class="footer-bottom-content">
+        <div class="footer-copyright">
+          <p>&copy; 2024 LaPlata. Desarrollado por <a href="https://github.com/InflvxDev" target="_blank" class="developer-link">InflvxDev</a></p>
+        </div>
+        <div class="footer-meta">
+          <span class="footer-version">v1.0.0</span>
+          <span class="footer-status">
+            <span class="status-dot"></span>
+            Todos los sistemas operativos
+          </span>
+        </div>
+      </div>
+    </div>
+
+  </footer>
+
+  <!-- Botón flotante para scroll hacia arriba -->
+  <button class="scroll-to-top-btn" id="scrollToTopBtn" (click)="scrollToTop()">
+    <mat-icon class="scroll-icon">keyboard_arrow_up</mat-icon>
+  </button>
+
+</div>

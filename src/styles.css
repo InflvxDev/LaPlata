@@ -1,0 +1,58 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* Material Design Icons */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+/* Variables globales críticas V3 - Equilibrio 60% blanco, 40% colores */
+:root {
+  --primary-green: #2E8B57;
+  --primary-green-dark: #1F5F3F;
+  --primary-green-light: #3CB371;
+  --secondary-yellow: #FFD700;
+  --secondary-yellow-dark: #FFA500;
+  --secondary-yellow-light: #FFFF99;
+  --accent-green: #00FF7F;
+  --accent-orange: #FF6347;
+  --white: #FFFFFF;
+  --black: #000000;
+  --gray-light: #F8F9FA;
+  --gray-medium: #6C757D;
+  --gray-dark: #343A40;
+  --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.15);
+  --shadow-strong: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* Reset global crítico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Estilos base críticos V3 - Principalmente blanco */
+.landing-container-v3 {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+  line-height: 1.6 !important;
+  color: var(--gray-dark) !important;
+  background: var(--white) !important;
+}
+
+.header-v3 {
+  background: var(--white) !important;
+  padding: 1rem 0 !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 1000 !important;
+  box-shadow: var(--shadow-light) !important;
+  border-bottom: 1px solid #E9ECEF !important;
+}
+
+.hero-v3 {
+  background: var(--white) !important;
+  padding: 5rem 0 !important;
+  min-height: 85vh !important;
+  display: flex !important;
+  align-items: center !important;
+}
