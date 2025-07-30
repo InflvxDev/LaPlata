@@ -735,6 +735,11 @@ html {
   font-size: 0.95rem;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  text-decoration: none;
+}
+
+.btn-login-v3:visited {
+  color: var(--gray-dark);
 }
 
 .btn-icon {
@@ -770,6 +775,11 @@ html {
   box-shadow: 0 4px 20px rgba(46, 139, 87, 0.3);
   position: relative;
   overflow: hidden;
+  text-decoration: none;
+}
+
+.btn-register-v3:visited {
+  color: var(--white);
 }
 
 .btn-register-v3::before {
@@ -1019,6 +1029,11 @@ html {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  text-decoration: none;
+}
+
+.btn-primary-v3:visited {
+  color: var(--white);
 }
 
 .btn-primary-v3:hover {
@@ -1845,6 +1860,11 @@ html {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  text-decoration: none;
+}
+
+.footer-btn-primary:visited {
+  color: white;
 }
 
 .footer-btn-primary:hover {

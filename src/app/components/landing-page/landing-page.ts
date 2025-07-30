@@ -2,12 +2,13 @@ import { Component, ViewEncapsulation, OnInit, OnDestroy, Inject, PLATFORM_ID } 
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-landing-page',
   standalone: true,
-  imports: [MatIconModule, MatButtonModule, CommonModule],
+  imports: [MatIconModule, MatButtonModule, CommonModule, RouterModule],
   templateUrl: './landing-page.html',
   styleUrls: ['./landing-page.css'],
   encapsulation: ViewEncapsulation.None
