@@ -39,6 +39,92 @@
 
   <!-- Main Content -->
   <main class="dashboard-main">
-    <!-- <h1>dashboard its works</h1> -->
+    <div class="dashboard-content">
+      <div class="bento-grid">
+        <!-- Saldo Total -->
+        <div class="bento-card saldo-total">
+          <div class="card-header">
+            <div class="card-icon">
+              <i class="material-icons">account_balance_wallet</i>
+            </div>
+            <h3 class="card-title">Saldo Total</h3>
+          </div>
+          <div class="card-content">
+            <div class="amount" *ngIf="!isLoading && dashboardStats">
+              ${{ dashboardStats.saldoTotal | number:'1.2-2' }}
+            </div>
+            <div class="loading" *ngIf="isLoading">
+              <div class="spinner"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Total Ingresos -->
+        <div class="bento-card total-ingresos">
+          <div class="card-header">
+            <div class="card-icon">
+              <i class="material-icons">trending_up</i>
+            </div>
+            <h3 class="card-title">Total Ingresos</h3>
+          </div>
+          <div class="card-content">
+            <div class="amount" *ngIf="!isLoading && dashboardStats">
+              ${{ dashboardStats.totalIngresos | number:'1.2-2' }}
+            </div>
+            <div class="loading" *ngIf="isLoading">
+              <div class="spinner"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Total Gastos -->
+        <div class="bento-card total-gastos">
+          <div class="card-header">
+            <div class="card-icon">
+              <i class="material-icons">trending_down</i>
+            </div>
+            <h3 class="card-title">Total Gastos</h3>
+          </div>
+          <div class="card-content">
+            <div class="amount" *ngIf="!isLoading && dashboardStats">
+              ${{ dashboardStats.totalGastos | number:'1.2-2' }}
+            </div>
+            <div class="loading" *ngIf="isLoading">
+              <div class="spinner"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección de Carteras -->
+       <div class="carteras-section">
+         <div class="section-header">
+           <h3 class="section-title">Mis Carteras</h3>
+           <button class="add-cartera-btn">
+             <i class="material-icons">add</i>
+           </button>
+         </div>
+        <div class="carteras-container" *ngIf="!isLoading && dashboardStats">
+          <div class="cartera-item" *ngFor="let cartera of dashboardStats.carteras">
+            <div class="cartera-info">
+              <div class="cartera-icon">
+                <i class="material-icons">account_balance</i>
+              </div>
+              <div class="cartera-details">
+                <h4 class="cartera-nombre">{{ cartera.nombre }}</h4>
+                <span class="cartera-saldo">${{ cartera.saldo_total | number:'1.2-2' }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="empty-state" *ngIf="dashboardStats.carteras.length === 0">
+            <i class="material-icons">account_balance_wallet</i>
+            <p>No tienes carteras creadas</p>
+          </div>
+        </div>
+        <div class="loading" *ngIf="isLoading">
+          <div class="spinner"></div>
+        </div>
+      </div>
+    </div>
   </main>
 </div>
