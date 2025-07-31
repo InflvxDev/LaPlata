@@ -17,12 +17,31 @@
             <div class="logo-glow"></div>
           </div>
         </div>
-        <h1 class="welcome-title">Bienvenido a <span style="color: var(--primary-green);">LaPlata</span></h1>
-        <p class="welcome-subtitle">Inicia sesión para acceder a tu gestor financiero</p>
+        <h1 class="welcome-title">Únete a <span style="color: var(--primary-green);">LaPlata</span></h1>
+        <p class="welcome-subtitle">Crea tu cuenta para comenzar a gestionar tus finanzas</p>
       </div>
 
       <!-- Formulario -->
-      <form class="elegant-form" (ngSubmit)="onSubmit()" #loginForm="ngForm">
+      <form class="elegant-form" (ngSubmit)="onSubmit()" #registerForm="ngForm">
+        <!-- Campo de nombre -->
+        <div class="form-field">
+          <label class="field-label">Nombre completo</label>
+          <div class="input-wrapper">
+            <i class="material-icons input-icon" style="color: #CCCCCC !important;">person</i>
+            <input 
+              type="text" 
+              class="elegant-input" 
+              placeholder="Tu nombre" style="color: #555555; border-color: var(--primary-green-light);"
+              [(ngModel)]="name"
+              name="name"
+              required
+              #nameInput="ngModel">
+          </div>
+          <div class="field-error" *ngIf="nameInput.invalid && (nameInput.touched || nameInput.dirty)" style="color: #EF4444 !important;">
+            <span><i class="material-icons" style="font-size: 16px; vertical-align: middle; margin-right: 4px; color: #EF4444;">error_outline</i> Por favor ingresa tu nombre</span>
+          </div>
+        </div>
+
         <!-- Campo de email -->
         <div class="form-field">
           <label class="field-label">Correo electrónico</label>
@@ -68,48 +87,56 @@
           </div>
         </div>
 
-        <!-- Opciones -->
-        <div class="form-options">
-          <label class="remember-checkbox">
-            <input type="checkbox" [(ngModel)]="rememberMe" name="rememberMe">
-            <span class="checkmark"></span>
-            <span class="checkbox-text">Recordarme</span>
-          </label>
-          <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
+        <!-- Campo de confirmar contraseña -->
+        <div class="form-field">
+          <label class="field-label">Confirmar contraseña</label>
+          <div class="input-wrapper">
+            <i class="material-icons input-icon" style="color: #CCCCCC !important;">lock</i>
+            <input 
+              [type]="showConfirmPassword ? 'text' : 'password'" 
+              class="elegant-input" 
+              placeholder="••••••" style="color: #555555; border-color: var(--primary-green-light);"
+              [(ngModel)]="confirmPassword"
+              name="confirmPassword"
+              required
+              #confirmPasswordInput="ngModel">
+            <button 
+              type="button" 
+              class="password-toggle" 
+              (click)="toggleConfirmPasswordVisibility()">
+              <i class="material-icons" style="color: #CCCCCC !important;">{{ showConfirmPassword ? 'visibility_off' : 'visibility' }}</i>
+            </button>
+          </div>
+          <div class="field-error" *ngIf="confirmPasswordInput.touched && password !== confirmPassword" style="color: #EF4444 !important;">
+            <span><i class="material-icons" style="font-size: 16px; vertical-align: middle; margin-right: 4px; color: #EF4444;">error_outline</i> Las contraseñas no coinciden</span>
+          </div>
         </div>
 
-        <!-- Botón de login -->
+        <!-- Términos y condiciones -->
+        <div class="form-options">
+          <label class="remember-checkbox">
+            <input type="checkbox" [(ngModel)]="termsAccepted" name="termsAccepted">
+            <span class="checkmark"></span>
+            <span class="checkbox-text">Acepto los <a href="#" class="terms-link">términos y condiciones</a></span>
+          </label>
+        </div>
+
+        <!-- Botón de registro -->
         <button 
           type="submit" 
           class="login-btn" 
           [disabled]="!isValidForm() || isLoading"
           [class.loading]="isLoading">
-          <span *ngIf="!isLoading">Iniciar Sesión</span>
-          <span *ngIf="isLoading">Iniciando sesión...</span>
+          <span *ngIf="!isLoading">Crear Cuenta</span>
+          <span *ngIf="isLoading">Creando cuenta...</span>
           <i class="material-icons btn-icon" *ngIf="!isLoading">arrow_forward</i>
           <i class="material-icons btn-icon loading-spinner" *ngIf="isLoading">refresh</i>
         </button>
       </form>
 
-      <!-- Divider -->
-      <div class="divider">
-        <span class="divider-text">O CONTINÚA CON</span>
-      </div>
-
-      <!-- Botones sociales -->
-      <div class="social-buttons">
-        <button class="social-btn google-btn" (click)="loginWithGoogle()">
-          <span class="google-icon"></span>
-          <span>Continuar con Google</span>
-        </button>
-      </div>
-
-      <!-- Footer -->
-      <div class="form-footer">
-        <p class="signup-text">
-          ¿No tienes una cuenta? 
-          <a routerLink="/register" class="signup-link">Regístrate gratis</a>
-        </p>
+      <!-- Ya tienes cuenta -->
+      <div class="register-link-container">
+        <p class="register-text">¿Ya tienes una cuenta? <a routerLink="/login" class="register-link">Inicia sesión</a></p>
       </div>
     </div>
   </main>
