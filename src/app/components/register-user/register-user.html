@@ -23,6 +23,17 @@
 
       <!-- Formulario -->
       <form class="elegant-form" (ngSubmit)="onSubmit()" #registerForm="ngForm">
+        <!-- Mensajes de error y éxito -->
+        <div class="message-container" *ngIf="errorMessage || successMessage">
+          <div class="error-message" *ngIf="errorMessage">
+            <i class="material-icons">error_outline</i>
+            <span>{{ errorMessage }}</span>
+          </div>
+          <div class="success-message" *ngIf="successMessage">
+            <i class="material-icons">check_circle</i>
+            <span>{{ successMessage }}</span>
+          </div>
+        </div>
         <!-- Campo de nombre -->
         <div class="form-field">
           <label class="field-label">Nombre completo</label>

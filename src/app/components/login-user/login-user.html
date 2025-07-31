@@ -23,6 +23,18 @@
 
       <!-- Formulario -->
       <form class="elegant-form" (ngSubmit)="onSubmit()" #loginForm="ngForm">
+        <!-- Mensajes de error y éxito -->
+        <div class="message-container" *ngIf="errorMessage || successMessage">
+          <div class="error-message" *ngIf="errorMessage">
+            <i class="material-icons">error_outline</i>
+            <span>{{ errorMessage }}</span>
+          </div>
+          <div class="success-message" *ngIf="successMessage">
+            <i class="material-icons">check_circle</i>
+            <span>{{ successMessage }}</span>
+          </div>
+        </div>
+
         <!-- Campo de email -->
         <div class="form-field">
           <label class="field-label">Correo electrónico</label>
@@ -75,7 +87,7 @@
             <span class="checkmark"></span>
             <span class="checkbox-text">Recordarme</span>
           </label>
-          <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
+          <a href="#" class="forgot-link" (click)="forgotPassword(); $event.preventDefault()">¿Olvidaste tu contraseña?</a>
         </div>
 
         <!-- Botón de login -->
