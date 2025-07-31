@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { SupabaseClient } from '@supabase/supabase-js';
 import { Observable, from, BehaviorSubject, firstValueFrom } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { SupabaseService } from '../libs/supabaseClient';
 import { CarteraService } from './carteraService';
 
 export interface Ingreso {
@@ -56,8 +56,8 @@ export class IngresosService {
   private ingresosSubject = new BehaviorSubject<Ingreso[]>([]);
   public ingresos$ = this.ingresosSubject.asObservable();
 
-  constructor(private carteraService: CarteraService) {
-    this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
+  constructor(private carteraService: CarteraService, private supabaseService: SupabaseService) {
+    this.supabase = this.supabaseService.client;
   }
 
   // Obtener todos los ingresos del usuario
@@ -83,133 +83,169 @@ export class IngresosService {
   // Obtener ingresos por rango de fechas
   getIngresosByDateRange(fechaInicio: string, fechaFin: string): Observable<Ingreso[]> {
     return from(
-      this.supabase
-        .from('ingresos')
-        .select(`
-          *,
-          cartera:cartera_id(nombre),
-          categoria:categoria_id(nombre)
-        `)
-        .gte('fecha', fechaInicio)
-        .lte('fecha', fechaFin)
-        .order('fecha', { ascending: false })
-        .then(({ data, error }) => {
-          if (error) throw error;
-          return data || [];
-        })
+      this.supabase.auth.getUser().then(({ data: { user }, error: authError }) => {
+        if (authError || !user) {
+          throw new Error('Usuario no autenticado');
+        }
+
+        return this.supabase
+          .from('ingresos')
+          .select(`
+            *,
+            cartera:cartera_id(nombre),
+            categoria:categoria_id(nombre)
+          `)
+          .eq('user_id', user.id)
+          .gte('fecha', fechaInicio)
+          .lte('fecha', fechaFin)
+          .order('fecha', { ascending: false })
+          .then(({ data, error }) => {
+            if (error) throw error;
+            return data || [];
+          });
+      })
     );
   }
 
   // Obtener un ingreso por ID
   getIngresoById(id: string): Observable<Ingreso | null> {
     return from(
-      this.supabase
-        .from('ingresos')
-        .select(`
-          *,
-          cartera:cartera_id(nombre),
-          categoria:categoria_id(nombre)
-        `)
-        .eq('id', id)
-        .single()
-        .then(({ data, error }) => {
-          if (error) throw error;
-          return data;
-        })
+      this.supabase.auth.getUser().then(({ data: { user }, error: authError }) => {
+        if (authError || !user) {
+          throw new Error('Usuario no autenticado');
+        }
+
+        return this.supabase
+          .from('ingresos')
+          .select(`
+            *,
+            cartera:cartera_id(nombre),
+            categoria:categoria_id(nombre)
+          `)
+          .eq('id', id)
+          .eq('user_id', user.id)
+          .single()
+          .then(({ data, error }) => {
+            if (error) throw error;
+            return data;
+          });
+      })
     );
   }
 
   // Crear nuevo ingreso
   createIngreso(ingreso: CreateIngresoRequest): Observable<Ingreso> {
     return from(
-      this.supabase
-        .from('ingresos')
-        .insert([{
+      this.supabase.auth.getUser().then(async ({ data: { user }, error: authError }) => {
+        if (authError || !user) {
+          throw new Error('Usuario no autenticado');
+        }
+
+        const ingresoData = {
           ...ingreso,
+          user_id: user.id,
           fecha: ingreso.fecha || new Date().toISOString().split('T')[0]
-        }])
-        .select(`
-          *,
-          cartera:cartera_id(nombre),
-          categoria:categoria_id(nombre)
-        `)
-        .single()
-        .then(async ({ data, error }) => {
-          if (error) throw error;
-          
-          // Actualizar saldo de la cartera
-          await this.updateCarteraSaldo(ingreso.cartera_id, ingreso.monto, 'add');
-          
-          this.refreshIngresos();
-          return data;
-        })
+        };
+
+        const { data, error } = await this.supabase
+          .from('ingresos')
+          .insert([ingresoData])
+          .select(`
+            *,
+            cartera:cartera_id(nombre),
+            categoria:categoria_id(nombre)
+          `)
+          .single();
+
+        if (error) throw error;
+        
+        // Actualizar saldo de la cartera
+        await this.updateCarteraSaldo(ingreso.cartera_id, ingreso.monto, 'add');
+        
+        this.refreshIngresos();
+        return data;
+      })
     );
   }
 
   // Actualizar ingreso
   updateIngreso(id: string, updates: UpdateIngresoRequest): Observable<Ingreso> {
     return from(
-      this.supabase
-        .from('ingresos')
-        .select('cartera_id, monto')
-        .eq('id', id)
-        .single()
-        .then(async ({ data: oldData, error: selectError }) => {
-          if (selectError) throw selectError;
+      this.supabase.auth.getUser().then(async ({ data: { user }, error: authError }) => {
+        if (authError || !user) {
+          throw new Error('Usuario no autenticado');
+        }
+
+        const { data: oldData, error: selectError } = await this.supabase
+          .from('ingresos')
+          .select('cartera_id, monto')
+          .eq('id', id)
+          .eq('user_id', user.id)
+          .single();
           
-          const { data, error } = await this.supabase
-            .from('ingresos')
-            .update(updates)
-            .eq('id', id)
-            .select(`
-              *,
-              cartera:cartera_id(nombre),
-              categoria:categoria_id(nombre)
-            `)
-            .single();
-            
-          if (error) throw error;
+        if (selectError) throw selectError;
+        
+        const { data, error } = await this.supabase
+          .from('ingresos')
+          .update(updates)
+          .eq('id', id)
+          .eq('user_id', user.id)
+          .select(`
+            *,
+            cartera:cartera_id(nombre),
+            categoria:categoria_id(nombre)
+          `)
+          .single();
           
-          // Actualizar saldos de carteras si cambió el monto o la cartera
-          if (updates.monto !== undefined || updates.cartera_id !== undefined) {
-            // Restar el monto anterior de la cartera anterior
-            await this.updateCarteraSaldo(oldData.cartera_id, oldData.monto, 'subtract');
-            
-            // Sumar el nuevo monto a la nueva cartera
-            const newCarteraId = updates.cartera_id || oldData.cartera_id;
-            const newMonto = updates.monto || oldData.monto;
-            await this.updateCarteraSaldo(newCarteraId, newMonto, 'add');
-          }
+        if (error) throw error;
+        
+        // Actualizar saldos de carteras si cambió el monto o la cartera
+        if (updates.monto !== undefined || updates.cartera_id !== undefined) {
+          // Restar el monto anterior de la cartera anterior
+          await this.updateCarteraSaldo(oldData.cartera_id, oldData.monto, 'subtract');
           
-          this.refreshIngresos();
-          return data;
-        })
+          // Sumar el nuevo monto a la nueva cartera
+          const newCarteraId = updates.cartera_id || oldData.cartera_id;
+          const newMonto = updates.monto || oldData.monto;
+          await this.updateCarteraSaldo(newCarteraId, newMonto, 'add');
+        }
+        
+        this.refreshIngresos();
+        return data;
+      })
     );
   }
 
   // Eliminar ingreso
   deleteIngreso(id: string): Observable<void> {
     return from(
-      this.supabase
-        .from('ingresos')
-        .select('cartera_id, monto')
-        .eq('id', id)
-        .single()
-        .then(async ({ data, error: selectError }) => {
-          if (selectError) throw selectError;
+      this.supabase.auth.getUser().then(async ({ data: { user }, error: authError }) => {
+        if (authError || !user) {
+          throw new Error('Usuario no autenticado');
+        }
+
+        const { data, error: selectError } = await this.supabase
+          .from('ingresos')
+          .select('cartera_id, monto')
+          .eq('id', id)
+          .eq('user_id', user.id)
+          .single();
           
-          const { error } = await this.supabase
-            .from('ingresos')
-            .delete()
-            .eq('id', id);
-            
-          if (error) throw error;
+        if (selectError) throw selectError;
+        
+        const { error } = await this.supabase
+          .from('ingresos')
+          .delete()
+          .eq('id', id)
+          .eq('user_id', user.id);
           
-          // Restar el monto de la cartera
-          await this.updateCarteraSaldo(data.cartera_id, data.monto, 'subtract');
-          
-          this.refreshIngresos();
-        })
+        if (error) throw error;
+        
+        // Restar el monto de la cartera
+        await this.updateCarteraSaldo(data.cartera_id, data.monto, 'subtract');
+        
+        this.refreshIngresos();
+      })
     );
   }
 
@@ -219,71 +255,88 @@ export class IngresosService {
     const mesActual = now.toISOString().slice(0, 7); // YYYY-MM
     const mesAnterior = new Date(now.getFullYear(), now.getMonth() - 1).toISOString().slice(0, 7);
 
-    return from(
-      Promise.all([
-        // Total general
-        this.supabase
-          .from('ingresos')
-          .select('monto')
-          .then(({ data }) => data?.reduce((sum, item) => sum + Number(item.monto), 0) || 0),
-        
-        // Total mes actual
-        this.supabase
-          .from('ingresos')
-          .select('monto')
-          .gte('fecha', `${mesActual}-01`)
-          .lt('fecha', `${mesActual}-32`)
-          .then(({ data }) => data?.reduce((sum, item) => sum + Number(item.monto), 0) || 0),
-        
-        // Total mes anterior
-        this.supabase
-          .from('ingresos')
-          .select('monto')
-          .gte('fecha', `${mesAnterior}-01`)
-          .lt('fecha', `${mesAnterior}-32`)
-          .then(({ data }) => data?.reduce((sum, item) => sum + Number(item.monto), 0) || 0),
-        
-        // Ingresos por categoría
-        this.supabase
-          .from('ingresos')
-          .select(`
-            monto,
-            categoria:categoria_id(nombre)
-          `)
-          .then(({ data, error }) => {
-            if (error) throw error;
-            const typedData = data as IngresoConCategoria[] | null;
-            const grouped = (typedData || []).reduce((acc: any, item: IngresoConCategoria) => {
-              // Manejar tanto objetos como arrays del join
-              let categoriaNombre = 'Sin categoría';
-              if (item.categoria) {
-                if (Array.isArray(item.categoria)) {
-                  categoriaNombre = item.categoria[0]?.nombre || 'Sin categoría';
-                } else {
-                  categoriaNombre = item.categoria.nombre || 'Sin categoría';
-                }
-              }
-              acc[categoriaNombre] = (acc[categoriaNombre] || 0) + Number(item.monto);
-              return acc;
-            }, {});
-            
-            return Object.entries(grouped).map(([categoria, total]) => ({
-              categoria,
-              total: total as number
-            }));
-          })
-      ]).then(([total, totalMesActual, totalMesAnterior, ingresosPorCategoria]) => {
-        const porcentajeCambio = totalMesAnterior > 0 
-          ? ((totalMesActual - totalMesAnterior) / totalMesAnterior) * 100 
-          : 0;
+    // Calcular fechas correctas para el mes actual y anterior
+    const fechaInicioMesActual = `${mesActual}-01`;
+    const fechaFinMesActual = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().slice(0, 10); // Último día del mes actual
+    
+    const fechaInicioMesAnterior = `${mesAnterior}-01`;
+    const fechaFinMesAnterior = new Date(now.getFullYear(), now.getMonth(), 0).toISOString().slice(0, 10); // Último día del mes anterior
 
-        return {
-          total,
-          totalMesActual,
-          totalMesAnterior,
-          porcentajeCambio,
-          ingresosPorCategoria
-        };
+    return from(
+      this.supabase.auth.getUser().then(({ data: { user }, error: authError }) => {
+        if (authError || !user) {
+          throw new Error('Usuario no autenticado');
+        }
+
+        return Promise.all([
+          // Total general
+          this.supabase
+            .from('ingresos')
+            .select('monto')
+            .eq('user_id', user.id)
+            .then(({ data }) => data?.reduce((sum, item) => sum + Number(item.monto), 0) || 0),
+          
+          // Total mes actual
+          this.supabase
+            .from('ingresos')
+            .select('monto')
+            .eq('user_id', user.id)
+            .gte('fecha', fechaInicioMesActual)
+            .lte('fecha', fechaFinMesActual)
+            .then(({ data }) => data?.reduce((sum, item) => sum + Number(item.monto), 0) || 0),
+          
+          // Total mes anterior
+          this.supabase
+            .from('ingresos')
+            .select('monto')
+            .eq('user_id', user.id)
+            .gte('fecha', fechaInicioMesAnterior)
+            .lte('fecha', fechaFinMesAnterior)
+            .then(({ data }) => data?.reduce((sum, item) => sum + Number(item.monto), 0) || 0),
+          
+          // Ingresos por categoría
+          this.supabase
+            .from('ingresos')
+            .select(`
+              monto,
+              categoria:categoria_id(nombre)
+            `)
+            .eq('user_id', user.id)
+            .then(({ data, error }) => {
+              if (error) throw error;
+              const typedData = data as IngresoConCategoria[] | null;
+              const grouped = (typedData || []).reduce((acc: any, item: IngresoConCategoria) => {
+                // Manejar tanto objetos como arrays del join
+                let categoriaNombre = 'Sin categoría';
+                if (item.categoria) {
+                  if (Array.isArray(item.categoria)) {
+                    categoriaNombre = item.categoria[0]?.nombre || 'Sin categoría';
+                  } else {
+                    categoriaNombre = item.categoria.nombre || 'Sin categoría';
+                  }
+                }
+                acc[categoriaNombre] = (acc[categoriaNombre] || 0) + Number(item.monto);
+                return acc;
+              }, {});
+              
+              return Object.entries(grouped).map(([categoria, total]) => ({
+                categoria,
+                total: total as number
+              }));
+            })
+        ]).then(([total, totalMesActual, totalMesAnterior, ingresosPorCategoria]) => {
+          const porcentajeCambio = totalMesAnterior > 0 
+            ? ((totalMesActual - totalMesAnterior) / totalMesAnterior) * 100 
+            : 0;
+
+          return {
+            total,
+            totalMesActual,
+            totalMesAnterior,
+            porcentajeCambio,
+            ingresosPorCategoria
+          };
+        });
       })
     );
   }

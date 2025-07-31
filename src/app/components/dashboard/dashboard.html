@@ -50,10 +50,10 @@
             <h3 class="card-title">Saldo Total</h3>
           </div>
           <div class="card-content">
-            <div class="amount" *ngIf="!isLoading && dashboardStats">
-              ${{ dashboardStats.saldoTotal | number:'1.2-2' }}
+            <div class="amount" *ngIf="(dashboardStats$ | async) && !(isLoading$ | async)">
+              ${{ (dashboardStats$ | async)?.saldoTotal | number:'1.2-2' }}
             </div>
-            <div class="loading" *ngIf="isLoading">
+            <div class="loading" *ngIf="(isLoading$ | async) || !(dashboardStats$ | async)">
               <div class="spinner"></div>
             </div>
           </div>
@@ -68,10 +68,10 @@
             <h3 class="card-title">Total Ingresos</h3>
           </div>
           <div class="card-content">
-            <div class="amount" *ngIf="!isLoading && dashboardStats">
-              ${{ dashboardStats.totalIngresos | number:'1.2-2' }}
+            <div class="amount" *ngIf="(dashboardStats$ | async) && !(isLoading$ | async)">
+              ${{ (dashboardStats$ | async)?.totalIngresos | number:'1.2-2' }}
             </div>
-            <div class="loading" *ngIf="isLoading">
+            <div class="loading" *ngIf="(isLoading$ | async) || !(dashboardStats$ | async)">
               <div class="spinner"></div>
             </div>
           </div>
@@ -86,10 +86,10 @@
             <h3 class="card-title">Total Gastos</h3>
           </div>
           <div class="card-content">
-            <div class="amount" *ngIf="!isLoading && dashboardStats">
-              ${{ dashboardStats.totalGastos | number:'1.2-2' }}
+            <div class="amount" *ngIf="(dashboardStats$ | async) && !(isLoading$ | async)">
+              ${{ (dashboardStats$ | async)?.totalGastos | number:'1.2-2' }}
             </div>
-            <div class="loading" *ngIf="isLoading">
+            <div class="loading" *ngIf="(isLoading$ | async) || !(dashboardStats$ | async)">
               <div class="spinner"></div>
             </div>
           </div>
@@ -100,12 +100,12 @@
        <div class="carteras-section">
          <div class="section-header">
            <h3 class="section-title">Mis Carteras</h3>
-           <button class="add-cartera-btn">
+           <button class="add-cartera-btn" (click)="openAddCarteraModal()">
              <i class="material-icons">add</i>
            </button>
          </div>
-        <div class="carteras-container" *ngIf="!isLoading && dashboardStats">
-          <div class="cartera-item" *ngFor="let cartera of dashboardStats.carteras">
+        <div class="carteras-container" *ngIf="(dashboardStats$ | async) && !(isLoading$ | async)">
+          <div class="cartera-item" *ngFor="let cartera of (dashboardStats$ | async)?.carteras">
             <div class="cartera-info">
               <div class="cartera-icon">
                 <i class="material-icons">account_balance</i>
@@ -116,15 +116,22 @@
               </div>
             </div>
           </div>
-          <div class="empty-state" *ngIf="dashboardStats.carteras.length === 0">
+          <div class="empty-state" *ngIf="(dashboardStats$ | async)?.carteras?.length === 0">
             <i class="material-icons">account_balance_wallet</i>
             <p>No tienes carteras creadas</p>
           </div>
         </div>
-        <div class="loading" *ngIf="isLoading">
+        <div class="loading" *ngIf="(isLoading$ | async) || !(dashboardStats$ | async)">
           <div class="spinner"></div>
         </div>
       </div>
-    </div>
-  </main>
-</div>
+     </div>
+   </main>
+
+   <!-- Modal Agregar Cartera -->
+   <app-add-cartera 
+     *ngIf="showAddCarteraModal"
+     (closeModal)="closeAddCarteraModal()"
+     (carteraCreated)="onCarteraCreated()">
+   </app-add-cartera>
+ </div>

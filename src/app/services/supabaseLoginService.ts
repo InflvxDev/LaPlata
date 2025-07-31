@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { supabase } from '../libs/supabaseClient';
-import { User, Session, AuthError } from '@supabase/supabase-js';
+import { SupabaseService } from '../libs/supabaseClient';
+import { User, Session, AuthError, AuthChangeEvent } from '@supabase/supabase-js';
 
 export interface AuthResponse {
   success: boolean;
@@ -34,6 +34,8 @@ export class SupabaseAuthService {
   public session$ = this.sessionSubject.asObservable();
   public loading$ = this.loadingSubject.asObservable();
 
+  private supabase = new SupabaseService();
+
   constructor() {
     this.initializeAuth();
   }
@@ -44,10 +46,10 @@ export class SupabaseAuthService {
   private async initializeAuth(): Promise<void> {
     try {
       // Obtener sesión actual
-      const { data: { session }, error } = await supabase.auth.getSession();
+      const { data: { session }, error } = await this.supabase.client.auth.getSession();
       
       if (error) {
-        // console.error('Error al obtener sesión:', error);
+        console.error('Error al obtener sesión:', error);
         return;
       }
 
@@ -55,13 +57,12 @@ export class SupabaseAuthService {
       this.currentUserSubject.next(session?.user ?? null);
 
       // Escuchar cambios de autenticación
-      supabase.auth.onAuthStateChange((event, session) => {
-        // console.log('Auth state changed:', event, session);
+      this.supabase.client.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
         this.sessionSubject.next(session);
         this.currentUserSubject.next(session?.user ?? null);
       });
     } catch (error) {
-      // console.error('Error al inicializar autenticación:', error);
+      console.error('Error al inicializar autenticación:', error);
     }
   }
 
@@ -72,7 +73,7 @@ export class SupabaseAuthService {
     this.loadingSubject.next(true);
     
     try {
-      const { data, error } = await supabase.auth.signUp({
+      const { data, error } = await this.supabase.client.auth.signUp({
         email: userData.email,
         password: userData.password,
         options: {
@@ -125,7 +126,7 @@ export class SupabaseAuthService {
     this.loadingSubject.next(true);
     
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await this.supabase.client.auth.signInWithPassword({
         email: loginData.email,
         password: loginData.password
       });
@@ -163,7 +164,7 @@ export class SupabaseAuthService {
     this.loadingSubject.next(true);
     
     try {
-      const { error } = await supabase.auth.signOut();
+      const { error } = await this.supabase.client.auth.signOut();
       
       this.loadingSubject.next(false);
 
@@ -196,7 +197,7 @@ export class SupabaseAuthService {
     this.loadingSubject.next(true);
     
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      const { error } = await this.supabase.client.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/reset-password`
       });
 
@@ -231,7 +232,7 @@ export class SupabaseAuthService {
     this.loadingSubject.next(true);
     
     try {
-      const { data, error } = await supabase.auth.updateUser({
+      const { data, error } = await this.supabase.client.auth.updateUser({
         password: newPassword
       });
 
@@ -267,7 +268,7 @@ export class SupabaseAuthService {
     this.loadingSubject.next(true);
     
     try {
-      const { data, error } = await supabase.auth.updateUser({
+      const { data, error } = await this.supabase.client.auth.updateUser({
         email: updates.email,
         data: {
           name: updates.name,

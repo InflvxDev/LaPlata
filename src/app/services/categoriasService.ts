@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { SupabaseClient } from '@supabase/supabase-js';
 import { Observable, from, BehaviorSubject } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { SupabaseService } from '../libs/supabaseClient';
 
 export type TipoMovimiento = 'ingreso' | 'gasto';
 
@@ -31,23 +31,30 @@ export class CategoriasService {
   private categoriasSubject = new BehaviorSubject<Categoria[]>([]);
   public categorias$ = this.categoriasSubject.asObservable();
 
-  constructor() {
-    this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
+  constructor(private supabaseService: SupabaseService) {
+    this.supabase = this.supabaseService.client;
   }
 
   // Obtener todas las categorías del usuario
   getCategorias(): Observable<Categoria[]> {
     return from(
-      this.supabase
-        .from('categorias')
-        .select('*')
-        .order('tipo', { ascending: true })
-        .order('nombre', { ascending: true })
-        .then(({ data, error }) => {
-          if (error) throw error;
-          this.categoriasSubject.next(data || []);
-          return data || [];
-        })
+      this.supabase.auth.getUser().then(({ data: { user }, error: authError }) => {
+        if (authError || !user) {
+          throw new Error('Usuario no autenticado');
+        }
+
+        return this.supabase
+          .from('categorias')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('tipo', { ascending: true })
+          .order('nombre', { ascending: true })
+          .then(({ data, error }) => {
+            if (error) throw error;
+            this.categoriasSubject.next(data || []);
+            return data || [];
+          });
+      })
     );
   }
 
@@ -84,16 +91,27 @@ export class CategoriasService {
   // Crear nueva categoría
   createCategoria(categoria: CreateCategoriaRequest): Observable<Categoria> {
     return from(
-      this.supabase
-        .from('categorias')
-        .insert([categoria])
-        .select()
-        .single()
-        .then(({ data, error }) => {
-          if (error) throw error;
-          this.refreshCategorias();
-          return data;
-        })
+      this.supabase.auth.getUser().then(({ data: { user }, error: authError }) => {
+        if (authError || !user) {
+          throw new Error('Usuario no autenticado');
+        }
+
+        const categoriaData = {
+          ...categoria,
+          user_id: user.id
+        };
+
+        return this.supabase
+          .from('categorias')
+          .insert([categoriaData])
+          .select()
+          .single()
+          .then(({ data, error }) => {
+            if (error) throw error;
+            this.refreshCategorias();
+            return data;
+          });
+      })
     );
   }
 
@@ -140,34 +158,40 @@ export class CategoriasService {
 
   // Crear categorías por defecto para un nuevo usuario
   createCategoriasDefault(): Observable<Categoria[]> {
-    const categoriasDefault = [
-      // Categorías de ingresos
-      { nombre: 'Salario', tipo: 'ingreso' as TipoMovimiento },
-      { nombre: 'Freelance', tipo: 'ingreso' as TipoMovimiento },
-      { nombre: 'Inversiones', tipo: 'ingreso' as TipoMovimiento },
-      { nombre: 'Otros ingresos', tipo: 'ingreso' as TipoMovimiento },
-      
-      // Categorías de gastos
-      { nombre: 'Alimentación', tipo: 'gasto' as TipoMovimiento },
-      { nombre: 'Transporte', tipo: 'gasto' as TipoMovimiento },
-      { nombre: 'Vivienda', tipo: 'gasto' as TipoMovimiento },
-      { nombre: 'Entretenimiento', tipo: 'gasto' as TipoMovimiento },
-      { nombre: 'Salud', tipo: 'gasto' as TipoMovimiento },
-      { nombre: 'Educación', tipo: 'gasto' as TipoMovimiento },
-      { nombre: 'Servicios', tipo: 'gasto' as TipoMovimiento },
-      { nombre: 'Otros gastos', tipo: 'gasto' as TipoMovimiento }
-    ];
-
     return from(
-      this.supabase
-        .from('categorias')
-        .insert(categoriasDefault)
-        .select()
-        .then(({ data, error }) => {
-          if (error) throw error;
-          this.refreshCategorias();
-          return data || [];
-        })
+      this.supabase.auth.getUser().then(({ data: { user }, error: authError }) => {
+        if (authError || !user) {
+          throw new Error('Usuario no autenticado');
+        }
+
+        const categoriasDefault = [
+          // Categorías de ingresos
+          { nombre: 'Salario', tipo: 'ingreso' as TipoMovimiento, user_id: user.id },
+          { nombre: 'Freelance', tipo: 'ingreso' as TipoMovimiento, user_id: user.id },
+          { nombre: 'Inversiones', tipo: 'ingreso' as TipoMovimiento, user_id: user.id },
+          { nombre: 'Otros ingresos', tipo: 'ingreso' as TipoMovimiento, user_id: user.id },
+          
+          // Categorías de gastos
+          { nombre: 'Alimentación', tipo: 'gasto' as TipoMovimiento, user_id: user.id },
+          { nombre: 'Transporte', tipo: 'gasto' as TipoMovimiento, user_id: user.id },
+          { nombre: 'Vivienda', tipo: 'gasto' as TipoMovimiento, user_id: user.id },
+          { nombre: 'Entretenimiento', tipo: 'gasto' as TipoMovimiento, user_id: user.id },
+          { nombre: 'Salud', tipo: 'gasto' as TipoMovimiento, user_id: user.id },
+          { nombre: 'Educación', tipo: 'gasto' as TipoMovimiento, user_id: user.id },
+          { nombre: 'Servicios', tipo: 'gasto' as TipoMovimiento, user_id: user.id },
+          { nombre: 'Otros gastos', tipo: 'gasto' as TipoMovimiento, user_id: user.id }
+        ];
+
+        return this.supabase
+          .from('categorias')
+          .insert(categoriasDefault)
+          .select()
+          .then(({ data, error }) => {
+            if (error) throw error;
+            this.refreshCategorias();
+            return data || [];
+          });
+      })
     );
   }
 

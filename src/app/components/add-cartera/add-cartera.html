@@ -1,0 +1,85 @@
+<!-- Modal Backdrop -->
+<div class="modal-backdrop" [class.closing]="isClosing" (click)="onBackdropClick($event)">
+  <div class="modal-container" [class.closing]="isClosing">
+    <!-- Header del Modal -->
+    <div class="modal-header">
+      <h2 class="modal-title">
+        <i class="material-icons">account_balance_wallet</i>
+        Agregar Nueva Cartera
+      </h2>
+      <button class="close-btn" (click)="onCancel()" type="button">
+        <i class="material-icons">close</i>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="modal-body">
+      <form [formGroup]="carteraForm" (ngSubmit)="onSubmit()">
+        <!-- Campo Nombre -->
+        <div class="form-group">
+          <label for="nombre" class="form-label">
+            <i class="material-icons">label</i>
+            Nombre de la Cartera
+          </label>
+          <input
+            type="text"
+            id="nombre"
+            formControlName="nombre"
+            class="form-input"
+            placeholder="Ej: Efectivo, Banco Principal, Ahorros..."
+            [class.error]="carteraForm.get('nombre')?.invalid && carteraForm.get('nombre')?.touched"
+          />
+          <div class="error-message" *ngIf="carteraForm.get('nombre')?.invalid && carteraForm.get('nombre')?.touched">
+            <span *ngIf="carteraForm.get('nombre')?.errors?.['required']">El nombre es requerido</span>
+            <span *ngIf="carteraForm.get('nombre')?.errors?.['minlength']">El nombre debe tener al menos 2 caracteres</span>
+          </div>
+        </div>
+
+        <!-- Campo Saldo Inicial -->
+        <div class="form-group">
+          <label for="saldo_total" class="form-label">
+            <i class="material-icons">attach_money</i>
+            Saldo Inicial
+          </label>
+          <input
+            type="number"
+            id="saldo_total"
+            formControlName="saldo_total"
+            class="form-input"
+            placeholder="0.00"
+            min="0"
+            step="0.01"
+            [class.error]="carteraForm.get('saldo_total')?.invalid && carteraForm.get('saldo_total')?.touched"
+          />
+          <div class="error-message" *ngIf="carteraForm.get('saldo_total')?.invalid && carteraForm.get('saldo_total')?.touched">
+            <span *ngIf="carteraForm.get('saldo_total')?.errors?.['required']">El saldo inicial es requerido</span>
+            <span *ngIf="carteraForm.get('saldo_total')?.errors?.['min']">El saldo debe ser mayor o igual a 0</span>
+          </div>
+        </div>
+
+        <!-- Error General -->
+        <div class="general-error" *ngIf="errorMessage">
+          <i class="material-icons">error</i>
+          {{ errorMessage }}
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-cancel" (click)="onCancel()" [disabled]="isLoading">
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="carteraForm.invalid || isLoading">
+            <span *ngIf="!isLoading">
+              <i class="material-icons">add</i>
+              Crear Cartera
+            </span>
+            <span *ngIf="isLoading" class="loading-content">
+              <div class="spinner"></div>
+              Creando...
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, combineLatest, map } from 'rxjs';
+import { Observable, combineLatest, map, catchError, of } from 'rxjs';
 import { CarteraService } from './carteraService';
 import { CategoriasService } from './categoriasService';
 import { IngresosService } from './ingresosService';
@@ -43,11 +43,23 @@ export class DashboardService {
   // Obtener estadísticas completas del dashboard
   getDashboardStats(): Observable<DashboardStats> {
     return combineLatest([
-      this.carteraService.getSaldoTotal(),
-      this.carteraService.getCarteras(),
-      this.ingresosService.getIngresosStats(),
-      this.gastosService.getGastosStats(),
-      this.gastosService.getGastosRecientes()
+      this.carteraService.getSaldoTotal().pipe(catchError(() => of(0))),
+      this.carteraService.getCarteras().pipe(catchError(() => of([]))),
+      this.ingresosService.getIngresosStats().pipe(catchError(() => of({
+        total: 0,
+        totalMesActual: 0,
+        totalMesAnterior: 0,
+        porcentajeCambio: 0,
+        ingresosPorCategoria: []
+      }))),
+      this.gastosService.getGastosStats().pipe(catchError(() => of({
+        total: 0,
+        totalMesActual: 0,
+        totalMesAnterior: 0,
+        porcentajeCambio: 0,
+        gastosPorCategoria: []
+      }))),
+      this.gastosService.getGastosRecientes().pipe(catchError(() => of([])))
     ]).pipe(
       map(([saldoTotal, carteras, ingresosStats, gastosStats, gastosRecientes]) => {
         const balanceMensual = ingresosStats.totalMesActual - gastosStats.totalMesActual;
@@ -91,7 +103,10 @@ export class DashboardService {
 
     const observables = periodos.map(periodo => {
       const fechaInicio = `${periodo.periodo}-01`;
-      const fechaFin = `${periodo.periodo}-31`;
+      // Calcular el último día del mes correctamente
+      const [año, mes] = periodo.periodo.split('-');
+      const ultimoDia = new Date(parseInt(año), parseInt(mes), 0).getDate();
+      const fechaFin = `${periodo.periodo}-${ultimoDia.toString().padStart(2, '0')}`;
       
       return combineLatest([
         this.ingresosService.getIngresosByDateRange(fechaInicio, fechaFin),
