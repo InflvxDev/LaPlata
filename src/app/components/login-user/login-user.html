@@ -12,11 +12,12 @@
       <!-- Logo y bienvenida -->
       <div class="welcome-section">
         <div class="logo-section">
-          <div class="logo-circle">
-            <i class="material-icons">attach_money</i>
+          <div class="logo-container">
+            <img src="/assets/img/logo.png" alt="La Plata Logo" class="logo-image">
+            <div class="logo-glow"></div>
           </div>
         </div>
-        <h1 class="welcome-title">Bienvenido a LaPlata</h1>
+        <h1 class="welcome-title">Bienvenido a <span style="color: var(--primary-green);">LaPlata</span></h1>
         <p class="welcome-subtitle">Inicia sesión para acceder a tu gestor financiero</p>
       </div>
 
@@ -26,18 +27,18 @@
         <div class="form-field">
           <label class="field-label">Correo electrónico</label>
           <div class="input-wrapper">
-            <i class="material-icons input-icon">email</i>
+            <i class="material-icons input-icon" style="color: #CCCCCC !important;">email</i>
             <input 
               type="email" 
               class="elegant-input" 
-              placeholder="tu@email.com"
+              placeholder="tu@email.com" style="color: #555555; border-color: var(--primary-green-light);"
               [(ngModel)]="email"
               name="email"
               required
               #emailInput="ngModel">
           </div>
-          <div class="field-error" *ngIf="emailInput.invalid && emailInput.touched">
-            <span>Por favor ingresa un email válido</span>
+          <div class="field-error" *ngIf="emailInput.invalid && (emailInput.touched || emailInput.dirty)" style="color: #EF4444 !important;">
+            <span><i class="material-icons" style="font-size: 16px; vertical-align: middle; margin-right: 4px; color: #EF4444;">error_outline</i> Por favor ingresa un email válido</span>
           </div>
         </div>
 
@@ -45,11 +46,11 @@
         <div class="form-field">
           <label class="field-label">Contraseña</label>
           <div class="input-wrapper">
-            <i class="material-icons input-icon">lock</i>
+            <i class="material-icons input-icon" style="color: #CCCCCC !important;">lock</i>
             <input 
               [type]="showPassword ? 'text' : 'password'" 
               class="elegant-input" 
-              placeholder="••••••"
+              placeholder="••••••" style="color: #555555; border-color: var(--primary-green-light);"
               [(ngModel)]="password"
               name="password"
               required
@@ -59,11 +60,11 @@
               type="button" 
               class="password-toggle" 
               (click)="togglePasswordVisibility()">
-              <i class="material-icons">{{ showPassword ? 'visibility_off' : 'visibility' }}</i>
+              <i class="material-icons" style="color: #CCCCCC !important;">{{ showPassword ? 'visibility_off' : 'visibility' }}</i>
             </button>
           </div>
-          <div class="field-error" *ngIf="passwordInput.invalid && passwordInput.touched">
-            <span>La contraseña debe tener al menos 6 caracteres</span>
+          <div class="field-error" *ngIf="passwordInput.invalid && (passwordInput.touched || passwordInput.dirty)" style="color: #EF4444 !important;">
+            <span><i class="material-icons" style="font-size: 16px; vertical-align: middle; margin-right: 4px; color: #EF4444;">error_outline</i> La contraseña debe tener al menos 6 caracteres</span>
           </div>
         </div>
 
@@ -98,12 +99,8 @@
       <!-- Botones sociales -->
       <div class="social-buttons">
         <button class="social-btn google-btn" (click)="loginWithGoogle()">
-          <i class="material-icons">account_circle</i>
-          <span>Google</span>
-        </button>
-        <button class="social-btn apple-btn" (click)="loginWithApple()">
-          <i class="material-icons">phone_iphone</i>
-          <span>Apple</span>
+          <span class="google-icon"></span>
+          <span>Continuar con Google</span>
         </button>
       </div>
 

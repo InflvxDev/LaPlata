@@ -62,22 +62,4 @@ export class LoginUser {
       this.isLoading = false;
     }, 1500);
   }
-
-  loginWithGitHub(): void {
-    console.log('Login with GitHub');
-    this.isLoading = true;
-    // Implementar login con GitHub
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 1500);
-  }
-
-  loginWithApple(): void {
-    console.log('Login with Apple');
-    this.isLoading = true;
-    // Implementar login con Apple
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 1500);
-  }
 }
