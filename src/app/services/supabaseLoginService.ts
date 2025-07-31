@@ -47,7 +47,7 @@ export class SupabaseAuthService {
       const { data: { session }, error } = await supabase.auth.getSession();
       
       if (error) {
-        console.error('Error al obtener sesión:', error);
+        // console.error('Error al obtener sesión:', error);
         return;
       }
 
@@ -56,12 +56,12 @@ export class SupabaseAuthService {
 
       // Escuchar cambios de autenticación
       supabase.auth.onAuthStateChange((event, session) => {
-        console.log('Auth state changed:', event, session);
+        // console.log('Auth state changed:', event, session);
         this.sessionSubject.next(session);
         this.currentUserSubject.next(session?.user ?? null);
       });
     } catch (error) {
-      console.error('Error al inicializar autenticación:', error);
+      // console.error('Error al inicializar autenticación:', error);
     }
   }
 

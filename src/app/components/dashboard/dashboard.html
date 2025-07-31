@@ -1,0 +1,44 @@
+<div class="dashboard-container">
+  <!-- Header -->
+  <header class="dashboard-header">
+    <div class="header-content">
+      <!-- Logo -->
+      <div class="logo-section">
+        <div class="logo-container">
+          <img src="/assets/img/logo.png" alt="La Plata Logo" class="logo-image">
+          <div class="logo-glow"></div>
+        </div>
+        <div class="logo-text-container">
+          <span class="logo-text">LaPlata</span>
+          <span class="logo-tagline">Finanzas Inteligentes</span>
+        </div>
+      </div>
+
+      <!-- User Avatar Dropdown -->
+      <div class="user-section">
+        <div class="user-dropdown" (click)="toggleDropdown()">
+          <div class="user-info">
+            <span class="user-name">{{ userName }}</span>
+          </div>
+          <div class="user-avatar">
+            <i class="material-icons">person</i>
+          </div>
+          <i class="material-icons dropdown-arrow">keyboard_arrow_down</i>
+          
+          <!-- Dropdown Menu -->
+          <div class="dropdown-menu" [class.show]="isDropdownOpen">
+            <div class="dropdown-item" (click)="logout()">
+              <i class="material-icons">logout</i>
+              <span>Cerrar Sesión</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="dashboard-main">
+    <!-- <h1>dashboard its works</h1> -->
+  </main>
+</div>
