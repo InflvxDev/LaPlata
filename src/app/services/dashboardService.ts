@@ -15,6 +15,7 @@ export interface DashboardStats {
   porcentajeIngresos: number;
   porcentajeGastos: number;
   carteras: any[];
+  categorias: any[];
   gastosRecientes: any[];
   ingresosPorCategoria: any[];
   gastosPorCategoria: any[];
@@ -45,6 +46,7 @@ export class DashboardService {
     return combineLatest([
       this.carteraService.getSaldoTotal().pipe(catchError(() => of(0))),
       this.carteraService.getCarteras().pipe(catchError(() => of([]))),
+      this.categoriasService.getCategorias().pipe(catchError(() => of([]))),
       this.ingresosService.getIngresosStats().pipe(catchError(() => of({
         total: 0,
         totalMesActual: 0,
@@ -61,7 +63,7 @@ export class DashboardService {
       }))),
       this.gastosService.getGastosRecientes().pipe(catchError(() => of([])))
     ]).pipe(
-      map(([saldoTotal, carteras, ingresosStats, gastosStats, gastosRecientes]) => {
+      map(([saldoTotal, carteras, categorias, ingresosStats, gastosStats, gastosRecientes]) => {
         const balanceMensual = ingresosStats.totalMesActual - gastosStats.totalMesActual;
         const totalMovimientos = ingresosStats.totalMesActual + gastosStats.totalMesActual;
         
@@ -75,6 +77,7 @@ export class DashboardService {
           porcentajeIngresos: totalMovimientos > 0 ? (ingresosStats.totalMesActual / totalMovimientos) * 100 : 0,
           porcentajeGastos: totalMovimientos > 0 ? (gastosStats.totalMesActual / totalMovimientos) * 100 : 0,
           carteras,
+          categorias,
           gastosRecientes,
           ingresosPorCategoria: ingresosStats.ingresosPorCategoria,
           gastosPorCategoria: gastosStats.gastosPorCategoria

@@ -1,0 +1,128 @@
+<div class="modal-backdrop" (click)="onBackdropClick($event)">
+  <div class="modal-container">
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <div class="header-content">
+        <i class="material-icons">category</i>
+        <h2 class="modal-title">Detalles de Categoría</h2>
+      </div>
+      <button class="close-btn" (click)="onClose()" type="button">
+        <i class="material-icons">close</i>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="modal-body">
+      <!-- Confirmación de eliminación -->
+      <div class="delete-confirmation" *ngIf="showDeleteConfirmation">
+        <div class="delete-icon">
+          <i class="material-icons">warning</i>
+        </div>
+        <h3>¿Eliminar categoría?</h3>
+        <p>Esta acción no se puede deshacer. La categoría <strong>"{{ categoria.nombre }}"</strong> será eliminada permanentemente.</p>
+        <div class="delete-actions">
+          <button class="btn btn-cancel" (click)="cancelDelete()" [disabled]="isDeleting">
+            Cancelar
+          </button>
+          <button class="btn btn-danger" (click)="confirmDelete()" [disabled]="isDeleting">
+            <span *ngIf="!isDeleting">Eliminar</span>
+            <span *ngIf="isDeleting" class="loading-content">
+              <div class="spinner"></div>
+              Eliminando...
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Formulario principal -->
+      <form [formGroup]="categoriaForm" (ngSubmit)="onSubmit()" *ngIf="!showDeleteConfirmation">
+        <!-- Nombre de la categoría -->
+        <div class="form-group">
+          <label class="form-label">
+            <i class="material-icons">label</i>
+            Nombre de la categoría
+          </label>
+          <input 
+            type="text" 
+            class="form-input"
+            [class.error]="nombre?.invalid && nombre?.touched"
+            formControlName="nombre"
+            placeholder="Ej: Alimentación, Salario, etc."
+            maxlength="50">
+          
+          <!-- Mensajes de validación para nombre -->
+          <div class="error-messages" *ngIf="nombre?.invalid && nombre?.touched">
+            <span class="error-message" *ngIf="nombre?.errors?.['required']">
+              <i class="material-icons">error</i>
+              El nombre es obligatorio
+            </span>
+            <span class="error-message" *ngIf="nombre?.errors?.['minlength']">
+              <i class="material-icons">error</i>
+              El nombre debe tener al menos 2 caracteres
+            </span>
+            <span class="error-message" *ngIf="nombre?.errors?.['maxlength']">
+              <i class="material-icons">error</i>
+              El nombre no puede exceder 50 caracteres
+            </span>
+          </div>
+        </div>
+
+        <!-- Tipo de movimiento -->
+        <div class="form-group">
+          <label class="form-label">
+            <i class="material-icons">swap_vert</i>
+            Tipo de movimiento
+          </label>
+          <div class="tipo-selector">
+            <div class="tipo-option" 
+                 *ngFor="let tipoOption of tiposMovimiento"
+                 [class.selected]="tipo?.value === tipoOption.value"
+                 [class.error]="tipo?.invalid && tipo?.touched"
+                 (click)="tipo?.setValue(tipoOption.value)">
+              <div class="tipo-icon" [class]="'tipo-' + tipoOption.value">
+                <i class="material-icons">{{ tipoOption.icon }}</i>
+              </div>
+              <span class="tipo-label">{{ tipoOption.label }}</span>
+            </div>
+          </div>
+          
+          <!-- Mensaje de validación para tipo -->
+          <div class="error-messages" *ngIf="tipo?.invalid && tipo?.touched">
+            <span class="error-message">
+              <i class="material-icons">error</i>
+              Debes seleccionar un tipo de movimiento
+            </span>
+          </div>
+        </div>
+
+
+        <!-- Mensaje de error general -->
+        <div class="general-error" *ngIf="errorMessage">
+          <i class="material-icons">error</i>
+          <span>{{ errorMessage }}</span>
+        </div>
+      </form>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="modal-footer" *ngIf="!showDeleteConfirmation">
+      <button type="button" class="btn btn-danger" (click)="onDelete()" [disabled]="isLoading">
+        Eliminar
+      </button>
+      <div class="footer-actions">
+        <button type="button" class="btn btn-cancel" (click)="onClose()" [disabled]="isLoading">
+          Cancelar
+        </button>
+        <button type="submit" class="btn btn-primary" (click)="onSubmit()" [disabled]="categoriaForm.invalid || isLoading">
+          <span *ngIf="!isLoading">
+            Actualizar
+          </span>
+          <span *ngIf="isLoading" class="loading-content">
+            <div class="spinner"></div>
+            Actualizando...
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

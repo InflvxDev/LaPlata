@@ -4,6 +4,10 @@
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
+/* Componentes de Categorías */
+@import './app/components/add-categoria/add-categoria.css';
+@import './app/components/detalles-categoria/detalles-categoria.css';
+
 /* Variables globales críticas V3 - Equilibrio 60% blanco, 40% colores */
 :root {
   --primary-green: #2E8B57;

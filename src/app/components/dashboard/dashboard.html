@@ -40,96 +40,142 @@
   <!-- Main Content -->
   <main class="dashboard-main">
     <div class="dashboard-content">
-      <div class="bento-grid">
-        <!-- Saldo Total -->
-        <div class="bento-card saldo-total">
-          <div class="card-header">
-            <div class="card-icon">
+      <!-- Columna Izquierda -->
+      <div class="left-column">
+        <div class="bento-grid">
+          <!-- Saldo Total -->
+          <div class="bento-card saldo-total">
+            <div class="card-header">
+              <div class="card-icon">
+                <i class="material-icons">account_balance_wallet</i>
+              </div>
+              <h3 class="card-title">Saldo Total</h3>
+            </div>
+            <div class="card-content">
+              <div class="amount" *ngIf="(dashboardStats$ | async) && !(isLoading$ | async)">
+                ${{ (dashboardStats$ | async)?.saldoTotal | number:'1.2-2' }}
+              </div>
+              <div class="loading" *ngIf="(isLoading$ | async) || !(dashboardStats$ | async)">
+                <div class="spinner"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Total Ingresos -->
+          <div class="bento-card total-ingresos">
+            <div class="card-header">
+              <div class="card-icon">
+                <i class="material-icons">trending_up</i>
+              </div>
+              <h3 class="card-title">Total Ingresos</h3>
+            </div>
+            <div class="card-content">
+              <div class="amount" *ngIf="(dashboardStats$ | async) && !(isLoading$ | async)">
+                ${{ (dashboardStats$ | async)?.totalIngresos | number:'1.2-2' }}
+              </div>
+              <div class="loading" *ngIf="(isLoading$ | async) || !(dashboardStats$ | async)">
+                <div class="spinner"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Total Gastos -->
+          <div class="bento-card total-gastos">
+            <div class="card-header">
+              <div class="card-icon">
+                <i class="material-icons">trending_down</i>
+              </div>
+              <h3 class="card-title">Total Gastos</h3>
+            </div>
+            <div class="card-content">
+              <div class="amount" *ngIf="(dashboardStats$ | async) && !(isLoading$ | async)">
+                ${{ (dashboardStats$ | async)?.totalGastos | number:'1.2-2' }}
+              </div>
+              <div class="loading" *ngIf="(isLoading$ | async) || !(dashboardStats$ | async)">
+                <div class="spinner"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sección de Carteras -->
+        <div class="carteras-section">
+          <div class="section-header">
+            <h3 class="section-title">Mis Carteras</h3>
+            <button class="add-cartera-btn" (click)="openAddCarteraModal()">
+              <i class="material-icons">add</i>
+            </button>
+          </div>
+          <div class="carteras-container" *ngIf="(dashboardStats$ | async) && !(isLoading$ | async)">
+            <div class="cartera-item" *ngFor="let cartera of (dashboardStats$ | async)?.carteras" (click)="openDetallesCarteraModal(cartera)">
+              <div class="cartera-info">
+                <div class="cartera-icon">
+                  <i class="material-icons">account_balance</i>
+                </div>
+                <div class="cartera-details">
+                  <h4 class="cartera-nombre">{{ cartera.nombre }}</h4>
+                  <span class="cartera-saldo">${{ cartera.saldo_total | number:'1.2-2' }}</span>
+                </div>
+              </div>
+              <div class="cartera-actions">
+                <i class="material-icons">chevron_right</i>
+              </div>
+            </div>
+            <div class="empty-state" *ngIf="(dashboardStats$ | async)?.carteras?.length === 0">
               <i class="material-icons">account_balance_wallet</i>
-            </div>
-            <h3 class="card-title">Saldo Total</h3>
-          </div>
-          <div class="card-content">
-            <div class="amount" *ngIf="(dashboardStats$ | async) && !(isLoading$ | async)">
-              ${{ (dashboardStats$ | async)?.saldoTotal | number:'1.2-2' }}
-            </div>
-            <div class="loading" *ngIf="(isLoading$ | async) || !(dashboardStats$ | async)">
-              <div class="spinner"></div>
+              <p>No tienes carteras creadas</p>
             </div>
           </div>
-        </div>
-
-        <!-- Total Ingresos -->
-        <div class="bento-card total-ingresos">
-          <div class="card-header">
-            <div class="card-icon">
-              <i class="material-icons">trending_up</i>
-            </div>
-            <h3 class="card-title">Total Ingresos</h3>
-          </div>
-          <div class="card-content">
-            <div class="amount" *ngIf="(dashboardStats$ | async) && !(isLoading$ | async)">
-              ${{ (dashboardStats$ | async)?.totalIngresos | number:'1.2-2' }}
-            </div>
-            <div class="loading" *ngIf="(isLoading$ | async) || !(dashboardStats$ | async)">
-              <div class="spinner"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Total Gastos -->
-        <div class="bento-card total-gastos">
-          <div class="card-header">
-            <div class="card-icon">
-              <i class="material-icons">trending_down</i>
-            </div>
-            <h3 class="card-title">Total Gastos</h3>
-          </div>
-          <div class="card-content">
-            <div class="amount" *ngIf="(dashboardStats$ | async) && !(isLoading$ | async)">
-              ${{ (dashboardStats$ | async)?.totalGastos | number:'1.2-2' }}
-            </div>
-            <div class="loading" *ngIf="(isLoading$ | async) || !(dashboardStats$ | async)">
-              <div class="spinner"></div>
-            </div>
+          <div class="loading" *ngIf="(isLoading$ | async) || !(dashboardStats$ | async)">
+            <div class="spinner"></div>
           </div>
         </div>
       </div>
 
-      <!-- Sección de Carteras -->
-       <div class="carteras-section">
-         <div class="section-header">
-           <h3 class="section-title">Mis Carteras</h3>
-           <button class="add-cartera-btn" (click)="openAddCarteraModal()">
-             <i class="material-icons">add</i>
-           </button>
-         </div>
-        <div class="carteras-container" *ngIf="(dashboardStats$ | async) && !(isLoading$ | async)">
-          <div class="cartera-item" *ngFor="let cartera of (dashboardStats$ | async)?.carteras" (click)="openDetallesCarteraModal(cartera)">
-            <div class="cartera-info">
-              <div class="cartera-icon">
-                <i class="material-icons">account_balance</i>
+      <!-- Columna Centro (vacía por ahora) -->
+      <div class="center-column">
+        <!-- Esta sección estará vacía por ahora -->
+      </div>
+
+      <!-- Columna Derecha -->
+      <div class="right-column">
+        <!-- Sección de Categorías -->
+        <div class="categorias-section">
+          <div class="section-header">
+            <h3 class="section-title">Mis Categorías</h3>
+            <button class="add-categoria-btn" (click)="openAddCategoriaModal()">
+              <i class="material-icons">add</i>
+            </button>
+          </div>
+          <div class="categorias-container" *ngIf="(dashboardStats$ | async) && !(isLoading$ | async)">
+            <div class="categoria-item" *ngFor="let categoria of (dashboardStats$ | async)?.categorias" (click)="openDetallesCategoriaModal(categoria)">
+              <div class="categoria-info">
+                <div class="categoria-icon" [class]="'tipo-' + categoria.tipo">
+                  <i class="material-icons">{{ categoria.tipo === 'ingreso' ? 'trending_up' : 'trending_down' }}</i>
+                </div>
+                <div class="categoria-details">
+                  <h4 class="categoria-nombre">{{ categoria.nombre }}</h4>
+                  <span class="categoria-tipo" [class]="'tipo-' + categoria.tipo">
+                    {{ categoria.tipo === 'ingreso' ? 'Ingreso' : 'Gasto' }}
+                  </span>
+                </div>
               </div>
-              <div class="cartera-details">
-                <h4 class="cartera-nombre">{{ cartera.nombre }}</h4>
-                <span class="cartera-saldo">${{ cartera.saldo_total | number:'1.2-2' }}</span>
+              <div class="categoria-actions">
+                <i class="material-icons">chevron_right</i>
               </div>
             </div>
-            <div class="cartera-actions">
-              <i class="material-icons">chevron_right</i>
+            <div class="empty-state" *ngIf="(dashboardStats$ | async)?.categorias?.length === 0">
+              <i class="material-icons">category</i>
+              <p>No tienes categorías creadas</p>
             </div>
           </div>
-          <div class="empty-state" *ngIf="(dashboardStats$ | async)?.carteras?.length === 0">
-            <i class="material-icons">account_balance_wallet</i>
-            <p>No tienes carteras creadas</p>
+          <div class="loading" *ngIf="(isLoading$ | async) || !(dashboardStats$ | async)">
+            <div class="spinner"></div>
           </div>
-        </div>
-        <div class="loading" *ngIf="(isLoading$ | async) || !(dashboardStats$ | async)">
-          <div class="spinner"></div>
         </div>
       </div>
-     </div>
-   </main>
+    </div>
+  </main>
 
    <!-- Modal Agregar Cartera -->
    <app-add-cartera 
@@ -146,4 +192,20 @@
      (carteraUpdated)="onCarteraUpdated()"
      (carteraDeleted)="onCarteraDeleted()">
    </app-detalles-cartera>
+
+   <!-- Modal Agregar Categoría -->
+   <app-add-categoria 
+     *ngIf="showAddCategoriaModal"
+     (closeModal)="closeAddCategoriaModal()"
+     (categoriaCreated)="onCategoriaCreated()">
+   </app-add-categoria>
+
+   <!-- Modal Detalles Categoría -->
+   <app-detalles-categoria 
+     *ngIf="showDetallesCategoriaModal && selectedCategoria"
+     [categoria]="selectedCategoria"
+     (closeModal)="closeDetallesCategoriaModal()"
+     (categoriaUpdated)="onCategoriaUpdated()"
+     (categoriaDeleted)="onCategoriaDeleted()">
+   </app-detalles-categoria>
  </div>

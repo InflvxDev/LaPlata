@@ -5,13 +5,16 @@ import { SupabaseAuthService } from '../../services/supabaseLoginService';
 import { DashboardService, DashboardStats } from '../../services/dashboardService';
 import { AddCartera } from '../add-cartera/add-cartera';
 import { DetallesCartera } from '../detalles-cartera/detalles-cartera';
+import { AddCategoria } from '../add-categoria/add-categoria';
+import { DetallesCategoria } from '../detalles-categoria/detalles-categoria';
 import { Cartera } from '../../services/carteraService';
+import { Categoria } from '../../services/categoriasService';
 import { Subject, takeUntil, filter, switchMap, timeout, catchError, of, startWith, BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, AddCartera, DetallesCartera],
+  imports: [CommonModule, AddCartera, DetallesCartera, AddCategoria, DetallesCategoria],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -24,6 +27,9 @@ export class Dashboard implements OnInit, OnDestroy {
   showAddCarteraModal = false;
   showDetallesCarteraModal = false;
   selectedCartera: Cartera | null = null;
+  showAddCategoriaModal = false;
+  showDetallesCategoriaModal = false;
+  selectedCategoria: Categoria | null = null;
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -97,6 +103,7 @@ export class Dashboard implements OnInit, OnDestroy {
             porcentajeIngresos: 0,
             porcentajeGastos: 0,
             carteras: [],
+            categorias: [],
             gastosRecientes: [],
             ingresosPorCategoria: [],
             gastosPorCategoria: []
@@ -153,6 +160,43 @@ export class Dashboard implements OnInit, OnDestroy {
     // Recargar los datos del dashboard cuando se elimina una cartera
     this.loadDashboardData();
     this.closeDetallesCarteraModal();
+  }
+
+  // Métodos para categorías
+  openAddCategoriaModal() {
+    this.showAddCategoriaModal = true;
+  }
+
+  closeAddCategoriaModal() {
+    this.showAddCategoriaModal = false;
+  }
+
+  onCategoriaCreated() {
+    // Recargar los datos del dashboard cuando se crea una nueva categoría
+    this.loadDashboardData();
+    this.closeAddCategoriaModal();
+  }
+
+  openDetallesCategoriaModal(categoria: Categoria) {
+    this.selectedCategoria = categoria;
+    this.showDetallesCategoriaModal = true;
+  }
+
+  closeDetallesCategoriaModal() {
+    this.showDetallesCategoriaModal = false;
+    this.selectedCategoria = null;
+  }
+
+  onCategoriaUpdated() {
+    // Recargar los datos del dashboard cuando se actualiza una categoría
+    this.loadDashboardData();
+    this.closeDetallesCategoriaModal();
+  }
+
+  onCategoriaDeleted() {
+    // Recargar los datos del dashboard cuando se elimina una categoría
+    this.loadDashboardData();
+    this.closeDetallesCategoriaModal();
   }
 
   async logout() {
