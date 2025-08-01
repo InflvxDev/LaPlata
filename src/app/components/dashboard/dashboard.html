@@ -105,7 +105,7 @@
            </button>
          </div>
         <div class="carteras-container" *ngIf="(dashboardStats$ | async) && !(isLoading$ | async)">
-          <div class="cartera-item" *ngFor="let cartera of (dashboardStats$ | async)?.carteras">
+          <div class="cartera-item" *ngFor="let cartera of (dashboardStats$ | async)?.carteras" (click)="openDetallesCarteraModal(cartera)">
             <div class="cartera-info">
               <div class="cartera-icon">
                 <i class="material-icons">account_balance</i>
@@ -114,6 +114,9 @@
                 <h4 class="cartera-nombre">{{ cartera.nombre }}</h4>
                 <span class="cartera-saldo">${{ cartera.saldo_total | number:'1.2-2' }}</span>
               </div>
+            </div>
+            <div class="cartera-actions">
+              <i class="material-icons">chevron_right</i>
             </div>
           </div>
           <div class="empty-state" *ngIf="(dashboardStats$ | async)?.carteras?.length === 0">
@@ -134,4 +137,13 @@
      (closeModal)="closeAddCarteraModal()"
      (carteraCreated)="onCarteraCreated()">
    </app-add-cartera>
+
+   <!-- Modal Detalles Cartera -->
+   <app-detalles-cartera 
+     *ngIf="showDetallesCarteraModal && selectedCartera"
+     [cartera]="selectedCartera"
+     (closeModal)="closeDetallesCarteraModal()"
+     (carteraUpdated)="onCarteraUpdated()"
+     (carteraDeleted)="onCarteraDeleted()">
+   </app-detalles-cartera>
  </div>

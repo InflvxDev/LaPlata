@@ -4,12 +4,14 @@ import { Router } from '@angular/router';
 import { SupabaseAuthService } from '../../services/supabaseLoginService';
 import { DashboardService, DashboardStats } from '../../services/dashboardService';
 import { AddCartera } from '../add-cartera/add-cartera';
+import { DetallesCartera } from '../detalles-cartera/detalles-cartera';
+import { Cartera } from '../../services/carteraService';
 import { Subject, takeUntil, filter, switchMap, timeout, catchError, of, startWith, BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, AddCartera],
+  imports: [CommonModule, AddCartera, DetallesCartera],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -20,6 +22,8 @@ export class Dashboard implements OnInit, OnDestroy {
   dashboardStats$ = new BehaviorSubject<DashboardStats | null>(null);
   isLoading$ = new BehaviorSubject<boolean>(true);
   showAddCarteraModal = false;
+  showDetallesCarteraModal = false;
+  selectedCartera: Cartera | null = null;
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -127,6 +131,28 @@ export class Dashboard implements OnInit, OnDestroy {
     // Recargar los datos del dashboard cuando se crea una nueva cartera
     this.loadDashboardData();
     this.closeAddCarteraModal();
+  }
+
+  openDetallesCarteraModal(cartera: Cartera) {
+    this.selectedCartera = cartera;
+    this.showDetallesCarteraModal = true;
+  }
+
+  closeDetallesCarteraModal() {
+    this.showDetallesCarteraModal = false;
+    this.selectedCartera = null;
+  }
+
+  onCarteraUpdated() {
+    // Recargar los datos del dashboard cuando se actualiza una cartera
+    this.loadDashboardData();
+    this.closeDetallesCarteraModal();
+  }
+
+  onCarteraDeleted() {
+    // Recargar los datos del dashboard cuando se elimina una cartera
+    this.loadDashboardData();
+    this.closeDetallesCarteraModal();
   }
 
   async logout() {

@@ -1,0 +1,127 @@
+<!-- Modal Backdrop -->
+<div class="modal-backdrop" [class.closing]="isClosing" (click)="onBackdropClick($event)">
+  <div class="modal-container" [class.closing]="isClosing">
+    <!-- Header del Modal -->
+    <div class="modal-header">
+      <h2 class="modal-title">
+        <i class="material-icons">edit</i>
+        Detalles de Cartera
+      </h2>
+      <button class="close-btn" (click)="onCancel()" type="button">
+        <i class="material-icons">close</i>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="modal-body">
+      <!-- Confirmación de Eliminación -->
+      <div class="delete-confirmation" *ngIf="showDeleteConfirm">
+        <div class="delete-icon">
+          <i class="material-icons">warning</i>
+        </div>
+        <h3>¿Eliminar Cartera?</h3>
+        <p>Esta acción no se puede deshacer. Se eliminará permanentemente la cartera <strong>"{{ cartera.nombre }}"</strong>.</p>
+        
+        <div class="delete-actions">
+          <button type="button" class="btn btn-cancel" (click)="cancelDelete()" [disabled]="isDeleting">
+            Cancelar
+          </button>
+          <button type="button" class="btn btn-danger" (click)="confirmDelete()" [disabled]="isDeleting">
+            <span *ngIf="!isDeleting">
+              Eliminar
+            </span>
+            <span *ngIf="isDeleting" class="loading-content">
+              <div class="spinner"></div>
+              Eliminando...
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Formulario Principal -->
+      <form [formGroup]="carteraForm" (ngSubmit)="onSubmit()" *ngIf="!showDeleteConfirm">
+        <!-- Campo Nombre -->
+        <div class="form-group">
+          <label for="nombre" class="form-label">
+            <i class="material-icons">label</i>
+            Nombre de la Cartera
+          </label>
+          <input
+            type="text"
+            id="nombre"
+            formControlName="nombre"
+            class="form-input"
+            placeholder="Ej: Efectivo, Banco Principal, Ahorros..."
+            [class.error]="carteraForm.get('nombre')?.invalid && carteraForm.get('nombre')?.touched"
+          />
+          <div class="error-message" *ngIf="carteraForm.get('nombre')?.invalid && carteraForm.get('nombre')?.touched">
+            <span *ngIf="carteraForm.get('nombre')?.errors?.['required']">El nombre es requerido</span>
+            <span *ngIf="carteraForm.get('nombre')?.errors?.['minlength']">El nombre debe tener al menos 2 caracteres</span>
+          </div>
+        </div>
+
+        <!-- Campo Saldo -->
+        <div class="form-group">
+          <label for="saldo_total" class="form-label">
+            <i class="material-icons">attach_money</i>
+            Saldo Actual
+          </label>
+          <input
+            type="number"
+            id="saldo_total"
+            formControlName="saldo_total"
+            class="form-input"
+            placeholder="0.00"
+            min="0"
+            step="0.01"
+            [class.error]="carteraForm.get('saldo_total')?.invalid && carteraForm.get('saldo_total')?.touched"
+          />
+          <div class="error-message" *ngIf="carteraForm.get('saldo_total')?.invalid && carteraForm.get('saldo_total')?.touched">
+            <span *ngIf="carteraForm.get('saldo_total')?.errors?.['required']">El saldo es requerido</span>
+            <span *ngIf="carteraForm.get('saldo_total')?.errors?.['min']">El saldo debe ser mayor o igual a 0</span>
+          </div>
+        </div>
+
+        <!-- Información adicional -->
+        <div class="cartera-info">
+          <div class="info-item">
+            <span class="info-label">Creada el:</span>
+            <span class="info-value">{{ cartera.created_at | date:'dd/MM/yyyy' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Última actualización:</span>
+            <span class="info-value">{{ cartera.updated_at | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+        </div>
+
+        <!-- Error General -->
+        <div class="general-error" *ngIf="errorMessage">
+          <i class="material-icons">error</i>
+          {{ errorMessage }}
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" (click)="onDelete()" [disabled]="isLoading">
+            <i class="material-icons">delete</i>
+            Eliminar
+          </button>
+          <div class="footer-right">
+            <button type="button" class="btn btn-cancel" (click)="onCancel()" [disabled]="isLoading">
+              Cancelar
+            </button>
+            <button type="submit" class="btn btn-primary" [disabled]="carteraForm.invalid || isLoading">
+              <span *ngIf="!isLoading">
+                Actualizar
+              </span>
+              <span *ngIf="isLoading" class="loading-content">
+                <div class="spinner"></div>
+                Actualizando...
+              </span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

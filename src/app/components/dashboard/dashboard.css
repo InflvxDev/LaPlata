@@ -349,18 +349,36 @@
   border-radius: 12px;
   transition: all 0.3s ease;
   background: #fafafa;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .cartera-item:hover {
   background: #f5f5f5;
   border-color: var(--primary-green-light);
   transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(46, 139, 87, 0.1);
 }
 
 .cartera-info {
   display: flex;
   align-items: center;
   gap: 1rem;
+  flex: 1;
+}
+
+.cartera-actions {
+  display: flex;
+  align-items: center;
+  color: var(--gray-medium);
+  transition: all 0.3s ease;
+}
+
+.cartera-item:hover .cartera-actions {
+  color: var(--primary-green);
+  transform: translateX(4px);
 }
 
 .cartera-icon {
