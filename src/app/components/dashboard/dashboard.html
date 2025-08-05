@@ -132,9 +132,105 @@
         </div>
       </div>
 
-      <!-- Columna Centro (vacía por ahora) -->
+      <!-- Columna Centro -->
       <div class="center-column">
-        <!-- Esta sección estará vacía por ahora -->
+        <!-- Sección de Ingresos -->
+        <div class="income-section">
+          <div class="section-header">
+            <h3 class="section-title">Mis Ingresos</h3>
+            <button class="add-btn" (click)="openAddIngresoModal()">
+            <i class="material-icons">add</i>
+          </button>
+          </div>
+          
+          <div class="entries-list" *ngIf="(ingresos$ | async) as ingresos; else loadingIngresos">
+            <div *ngIf="ingresos.length > 0; else emptyIngresos">
+              <div 
+                class="entry-item" 
+                *ngFor="let ingreso of ingresos"
+                (click)="openDetallesIngresoModal(ingreso)"
+              >
+                <div class="entry-info">
+                   <div class="entry-icon">
+                     <i class="material-icons">trending_up</i>
+                   </div>
+                  <div class="entry-details">
+                    <div class="entry-text">
+                      <div class="entry-description">{{ ingreso.descripcion }}</div>
+                      <div class="entry-category">{{ getCategoriaNombre(ingreso.categoria) }}</div>
+                    </div>
+                    <div class="entry-amount">+${{ ingreso.monto | number:'1.0-0' }}</div>
+                  </div>
+                </div>
+                <div class="entry-actions">
+                   <i class="material-icons">chevron_right</i>
+                 </div>
+              </div>
+            </div>
+            
+            <ng-template #emptyIngresos>
+               <div class="empty-state">
+                 <i class="material-icons">trending_up</i>
+                 <p>No tienes ingresos registrados</p>
+               </div>
+             </ng-template>
+          </div>
+          
+          <ng-template #loadingIngresos>
+            <div class="loading-state">
+              <div class="spinner"></div>
+            </div>
+          </ng-template>
+        </div>
+
+        <!-- Sección de Gastos -->
+        <div class="expenses-section">
+          <div class="section-header">
+            <h3 class="section-title">Mis Gastos</h3>
+            <button class="add-btn" (click)="openAddGastoModal()">
+            <i class="material-icons">add</i>
+          </button>
+          </div>
+          
+          <div class="entries-list" *ngIf="(gastos$ | async) as gastos; else loadingGastos">
+            <div *ngIf="gastos.length > 0; else emptyGastos">
+              <div 
+                class="entry-item" 
+                *ngFor="let gasto of gastos"
+                (click)="openDetallesGastoModal(gasto)"
+              >
+                <div class="entry-info">
+                   <div class="entry-icon">
+                     <i class="material-icons">trending_down</i>
+                   </div>
+                  <div class="entry-details">
+                    <div class="entry-text">
+                      <div class="entry-description">{{ gasto.descripcion }}</div>
+                      <div class="entry-category">{{ getCategoriaNombre(gasto.categoria) }}</div>
+                    </div>
+                    <div class="entry-amount">-${{ gasto.monto | number:'1.0-0' }}</div>
+                  </div>
+                </div>
+                <div class="entry-actions">
+                   <i class="material-icons">chevron_right</i>
+                 </div>
+              </div>
+            </div>
+            
+            <ng-template #emptyGastos>
+               <div class="empty-state">
+                 <i class="material-icons">trending_down</i>
+                 <p>No tienes gastos registrados</p>
+               </div>
+             </ng-template>
+          </div>
+          
+          <ng-template #loadingGastos>
+            <div class="loading-state">
+              <div class="spinner"></div>
+            </div>
+          </ng-template>
+        </div>
       </div>
 
       <!-- Columna Derecha -->
@@ -208,4 +304,36 @@
      (categoriaUpdated)="onCategoriaUpdated()"
      (categoriaDeleted)="onCategoriaDeleted()">
    </app-detalles-categoria>
+
+   <!-- Modal Agregar Ingreso -->
+   <app-add-ingreso 
+     *ngIf="showAddIngresoModal"
+     (closeModal)="closeAddIngresoModal()"
+     (ingresoCreated)="onIngresoCreated()">
+   </app-add-ingreso>
+
+   <!-- Modal Agregar Gasto -->
+   <app-add-gasto 
+     *ngIf="showAddGastoModal"
+     (closeModal)="closeAddGastoModal()"
+     (gastoCreated)="onGastoCreated()">
+   </app-add-gasto>
+
+   <!-- Modal Detalles Ingreso -->
+   <app-detalles-ingreso 
+     *ngIf="showDetallesIngresoModal && selectedIngreso"
+     [ingreso]="selectedIngreso"
+     (closeModal)="closeDetallesIngresoModal()"
+     (ingresoUpdated)="onIngresoUpdated()"
+     (ingresoDeleted)="onIngresoDeleted()">
+   </app-detalles-ingreso>
+
+   <!-- Modal Detalles Gasto -->
+   <app-detalles-gasto 
+     *ngIf="showDetallesGastoModal && selectedGasto"
+     [gasto]="selectedGasto"
+     (closeModal)="closeDetallesGastoModal()"
+     (gastoUpdated)="onGastoUpdated()"
+     (gastoDeleted)="onGastoDeleted()">
+   </app-detalles-gasto>
  </div>

@@ -251,10 +251,6 @@
   gap: 2rem;
 }
 
-/* Columna Centro (vacía por ahora) */
-.center-column {
-  /* Vacía por ahora */
-}
 
 /* Columna Derecha */
 .right-column {
@@ -989,6 +985,276 @@
   }
 }
 
+/* Center column styles */
+.center-column {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 0 1rem;
+}
+
+/* Income and Expenses Sections */
+.income-section,
+.expenses-section {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.income-section:hover,
+.expenses-section:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
+}
+
+.income-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #28a745, #20c997);
+  border-radius: 16px 16px 0 0;
+}
+
+.expenses-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #dc3545, #fd7e14);
+  border-radius: 16px 16px 0 0;
+}
+
+.income-section .section-header,
+.expenses-section .section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.income-section .section-title,
+.expenses-section .section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--gray-dark);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.income-section .section-title::before {
+  content: '';
+  width: 4px;
+  height: 20px;
+  background: linear-gradient(135deg, #28a745, #20c997);
+  border-radius: 2px;
+}
+
+.expenses-section .section-title::before {
+  content: '';
+  width: 4px;
+  height: 20px;
+  background: linear-gradient(135deg, #dc3545, #fd7e14);
+  border-radius: 2px;
+}
+
+/* Add buttons */
+.income-section .add-btn,
+.expenses-section .add-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1.25rem;
+}
+
+.income-section .add-btn {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.2);
+}
+
+.income-section .add-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.expenses-section .add-btn {
+  background: linear-gradient(135deg, #dc3545, #fd7e14);
+  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.2);
+}
+
+.expenses-section .add-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+.income-section .add-btn:active,
+.expenses-section .add-btn:active {
+  transform: translateY(0);
+}
+
+/* Entries list */
+.entries-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.entry-item {
+  padding: 1rem;
+  border: 1px solid #f0f0f0;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  background: #fafafa;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.entry-item:hover {
+  background: #f5f5f5;
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.income-section .entry-item:hover {
+  border-color: #20c997;
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.1);
+}
+
+.expenses-section .entry-item:hover {
+  border-color: #fd7e14;
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.1);
+}
+
+.entry-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.entry-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.income-section .entry-icon {
+  background: linear-gradient(135deg, #28a745, #20c997);
+}
+
+.expenses-section .entry-icon {
+  background: linear-gradient(135deg, #dc3545, #fd7e14);
+}
+
+.entry-details {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.entry-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.entry-description {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--gray-dark);
+  margin: 0;
+}
+
+.entry-category {
+  font-size: 0.875rem;
+  color: var(--gray-medium);
+  font-weight: 500;
+}
+
+.entry-amount {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.income-section .entry-amount {
+  color: #28a745;
+}
+
+.expenses-section .entry-amount {
+  color: #dc3545;
+}
+
+.entry-actions {
+  display: flex;
+  align-items: center;
+  color: var(--gray-medium);
+  transition: all 0.3s ease;
+}
+
+.entry-item:hover .entry-actions {
+  transform: translateX(4px);
+}
+
+.income-section .entry-item:hover .entry-actions {
+  color: #28a745;
+}
+
+.expenses-section .entry-item:hover .entry-actions {
+  color: #dc3545;
+}
+
+/* Loading and empty states */
+.loading-state,
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: var(--gray-medium);
+}
+
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-state i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 1rem;
+}
+
 /* Responsive para el layout de 3 columnas */
 @media (max-width: 1600px) {
   .dashboard-content {
@@ -1015,10 +1281,61 @@
   }
   
   .center-column {
-    display: none;
+    display: flex;
+    order: 2; /* Mostrar después de la columna izquierda */
+  }
+  
+  .right-column {
+    order: 3; /* Mostrar al final */
+  }
+  
+  .left-column {
+    order: 1; /* Mostrar primero */
   }
   
   .dashboard-main {
     padding: 1rem;
+  }
+  
+  /* Ajustes específicos para móvil */
+  .center-column {
+    padding: 0;
+  }
+  
+  .income-section,
+  .expenses-section {
+    padding: 1rem;
+  }
+  
+  .entry-item {
+    padding: 0.75rem;
+  }
+  
+  .entry-icon {
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
+  }
+  
+  .entry-description {
+    font-size: 0.9rem;
+  }
+  
+  .entry-category {
+    font-size: 0.8rem;
+  }
+  
+  .entry-amount {
+    font-size: 1rem;
+  }
+  
+  .section-title {
+    font-size: 1rem;
+  }
+  
+  .add-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
   }
 }

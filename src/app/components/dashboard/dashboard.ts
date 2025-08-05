@@ -7,14 +7,20 @@ import { AddCartera } from '../add-cartera/add-cartera';
 import { DetallesCartera } from '../detalles-cartera/detalles-cartera';
 import { AddCategoria } from '../add-categoria/add-categoria';
 import { DetallesCategoria } from '../detalles-categoria/detalles-categoria';
+import { AddIngreso } from '../add-ingreso/add-ingreso';
+import { AddGasto } from '../add-gasto/add-gasto';
+import { DetallesIngreso } from '../detalles-ingreso/detalles-ingreso';
+import { DetallesGasto } from '../detalles-gasto/detalles-gasto';
 import { Cartera } from '../../services/carteraService';
 import { Categoria } from '../../services/categoriasService';
+import { IngresosService, Ingreso } from '../../services/ingresosService';
+import { GastosService, Gasto } from '../../services/gastosService';
 import { Subject, takeUntil, filter, switchMap, timeout, catchError, of, startWith, BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, AddCartera, DetallesCartera, AddCategoria, DetallesCategoria],
+  imports: [CommonModule, AddCartera, DetallesCartera, AddCategoria, DetallesCategoria, AddIngreso, AddGasto, DetallesIngreso, DetallesGasto],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -30,12 +36,29 @@ export class Dashboard implements OnInit, OnDestroy {
   showAddCategoriaModal = false;
   showDetallesCategoriaModal = false;
   selectedCategoria: Categoria | null = null;
+  
+  // Propiedades para ingresos
+  ingresos$ = new BehaviorSubject<Ingreso[]>([]);
+  isLoadingIngresos$ = new BehaviorSubject<boolean>(true);
+  showAddIngresoModal = false;
+  showDetallesIngresoModal = false;
+  selectedIngreso: Ingreso | null = null;
+  
+  // Propiedades para gastos
+  gastos$ = new BehaviorSubject<Gasto[]>([]);
+  isLoadingGastos$ = new BehaviorSubject<boolean>(true);
+  showAddGastoModal = false;
+  showDetallesGastoModal = false;
+  selectedGasto: Gasto | null = null;
+  
   private destroy$ = new Subject<void>();
 
   constructor(
     private router: Router,
     private supabaseAuth: SupabaseAuthService,
-    private dashboardService: DashboardService
+    private dashboardService: DashboardService,
+    private ingresosService: IngresosService,
+    private gastosService: GastosService
   ) {
     this.loadUserData();
   }
@@ -45,6 +68,8 @@ export class Dashboard implements OnInit, OnDestroy {
     const currentUser = this.supabaseAuth.getCurrentUser();
     if (currentUser) {
       this.loadDashboardData();
+      this.loadIngresos();
+      this.loadGastos();
     } else {
       // Esperar a que el usuario esté autenticado antes de cargar los datos
       this.supabaseAuth.currentUser$
@@ -56,6 +81,8 @@ export class Dashboard implements OnInit, OnDestroy {
         .subscribe((user) => {
           if (user) {
             this.loadDashboardData();
+            this.loadIngresos();
+            this.loadGastos();
           }
         });
     }
@@ -197,6 +224,141 @@ export class Dashboard implements OnInit, OnDestroy {
     // Recargar los datos del dashboard cuando se elimina una categoría
     this.loadDashboardData();
     this.closeDetallesCategoriaModal();
+  }
+
+  // Métodos para ingresos
+  private loadIngresos() {
+    this.isLoadingIngresos$.next(true);
+    
+    this.ingresosService.getIngresos()
+      .pipe(
+        takeUntil(this.destroy$),
+        timeout(5000),
+        catchError(error => {
+          console.error('Error al cargar ingresos:', error);
+          return of([]);
+        })
+      )
+      .subscribe({
+        next: (ingresos) => {
+          // Mostrar solo los últimos 5 ingresos
+          this.ingresos$.next(ingresos.slice(0, 5));
+          this.isLoadingIngresos$.next(false);
+        },
+        error: (error) => {
+          console.error('Error al cargar ingresos:', error);
+          this.isLoadingIngresos$.next(false);
+        }
+      });
+  }
+
+  openAddIngresoModal() {
+    this.showAddIngresoModal = true;
+  }
+
+  closeAddIngresoModal() {
+    this.showAddIngresoModal = false;
+  }
+
+  onIngresoCreated() {
+    this.loadIngresos();
+    this.loadDashboardData(); // Recargar stats del dashboard
+    this.closeAddIngresoModal();
+  }
+
+  openDetallesIngresoModal(ingreso: Ingreso) {
+    this.selectedIngreso = ingreso;
+    this.showDetallesIngresoModal = true;
+  }
+
+  closeDetallesIngresoModal() {
+    this.showDetallesIngresoModal = false;
+    this.selectedIngreso = null;
+  }
+
+  onIngresoUpdated() {
+    this.loadIngresos();
+    this.loadDashboardData(); // Recargar stats del dashboard
+    this.closeDetallesIngresoModal();
+  }
+
+  onIngresoDeleted() {
+    this.loadIngresos();
+    this.loadDashboardData(); // Recargar stats del dashboard
+    this.closeDetallesIngresoModal();
+  }
+
+  // Métodos para gastos
+  private loadGastos() {
+    this.isLoadingGastos$.next(true);
+    
+    this.gastosService.getGastos()
+      .pipe(
+        takeUntil(this.destroy$),
+        timeout(5000),
+        catchError(error => {
+          console.error('Error al cargar gastos:', error);
+          return of([]);
+        })
+      )
+      .subscribe({
+        next: (gastos) => {
+          // Mostrar solo los últimos 5 gastos
+          this.gastos$.next(gastos.slice(0, 5));
+          this.isLoadingGastos$.next(false);
+        },
+        error: (error) => {
+          console.error('Error al cargar gastos:', error);
+          this.isLoadingGastos$.next(false);
+        }
+      });
+  }
+
+  openAddGastoModal() {
+    this.showAddGastoModal = true;
+  }
+
+  closeAddGastoModal() {
+    this.showAddGastoModal = false;
+  }
+
+  onGastoCreated() {
+    this.loadGastos();
+    this.loadDashboardData(); // Recargar stats del dashboard
+    this.closeAddGastoModal();
+  }
+
+  openDetallesGastoModal(gasto: Gasto) {
+    this.selectedGasto = gasto;
+    this.showDetallesGastoModal = true;
+  }
+
+  closeDetallesGastoModal() {
+    this.showDetallesGastoModal = false;
+    this.selectedGasto = null;
+  }
+
+  onGastoUpdated() {
+    this.loadGastos();
+    this.loadDashboardData(); // Recargar stats del dashboard
+    this.closeDetallesGastoModal();
+  }
+
+  onGastoDeleted() {
+    this.loadGastos();
+    this.loadDashboardData(); // Recargar stats del dashboard
+    this.closeDetallesGastoModal();
+  }
+
+  // Método auxiliar para obtener el nombre de la categoría
+  getCategoriaNombre(categoria: any): string {
+    if (!categoria) return 'Sin categoría';
+    
+    if (Array.isArray(categoria)) {
+      return categoria[0]?.nombre || 'Sin categoría';
+    }
+    
+    return categoria.nombre || 'Sin categoría';
   }
 
   async logout() {
