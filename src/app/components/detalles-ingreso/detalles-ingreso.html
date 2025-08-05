@@ -1,0 +1,184 @@
+<!-- Modal Backdrop -->
+<div class="modal-backdrop" [class.closing]="isClosing" (click)="onBackdropClick($event)">
+  <div class="modal-container" [class.closing]="isClosing">
+    <!-- Header del Modal -->
+    <div class="modal-header">
+      <h2 class="modal-title">
+        <i class="material-icons">trending_up</i>
+        Detalles de Ingreso
+      </h2>
+      <button class="close-btn" (click)="onCancel()" type="button">
+        <i class="material-icons">close</i>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="modal-body">
+      <!-- Confirmación de Eliminación -->
+      <div class="delete-confirmation" *ngIf="showDeleteConfirm">
+        <div class="delete-icon">
+          <i class="material-icons">warning</i>
+        </div>
+        <h3>¿Eliminar Ingreso?</h3>
+        <p>Esta acción no se puede deshacer. Se eliminará permanentemente el ingreso de <strong>${{ ingreso.monto | number:'1.2-2' }}</strong>.</p>
+        
+        <div class="delete-actions">
+          <button type="button" class="btn btn-cancel" (click)="cancelDelete()" [disabled]="isDeleting">
+            Cancelar
+          </button>
+          <button type="button" class="btn btn-danger" (click)="confirmDelete()" [disabled]="isDeleting">
+            <span *ngIf="!isDeleting">
+              Eliminar
+            </span>
+            <span *ngIf="isDeleting" class="loading-content">
+              <div class="spinner"></div>
+              Eliminando...
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Formulario Principal -->
+      <form [formGroup]="ingresoForm" (ngSubmit)="onSubmit()" *ngIf="!showDeleteConfirm">
+        <!-- Campo Cartera -->
+        <div class="form-group">
+          <label for="cartera_id" class="form-label">
+            <i class="material-icons">account_balance_wallet</i>
+            Cartera
+          </label>
+          <select
+            id="cartera_id"
+            formControlName="cartera_id"
+            class="form-input"
+            [class.error]="ingresoForm.get('cartera_id')?.invalid && ingresoForm.get('cartera_id')?.touched"
+          >
+            <option value="">Selecciona una cartera</option>
+            <option *ngFor="let cartera of (carteras$ | async)" [value]="cartera.id">
+              {{ cartera.nombre }}
+            </option>
+          </select>
+          <div class="error-message" *ngIf="ingresoForm.get('cartera_id')?.invalid && ingresoForm.get('cartera_id')?.touched">
+            <span *ngIf="ingresoForm.get('cartera_id')?.errors?.['required']">La cartera es requerida</span>
+          </div>
+        </div>
+
+        <!-- Campo Categoría -->
+        <div class="form-group">
+          <label for="categoria_id" class="form-label">
+            <i class="material-icons">category</i>
+            Categoría (Opcional)
+          </label>
+          <select
+            id="categoria_id"
+            formControlName="categoria_id"
+            class="form-input"
+          >
+            <option value="">Sin categoría</option>
+            <option *ngFor="let categoria of (categorias$ | async)" [value]="categoria.id">
+              {{ categoria.nombre }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Campo Monto -->
+        <div class="form-group">
+          <label for="monto" class="form-label">
+            <i class="material-icons">attach_money</i>
+            Monto
+          </label>
+          <input
+            type="number"
+            id="monto"
+            formControlName="monto"
+            class="form-input"
+            placeholder="0.00"
+            min="0.01"
+            step="0.01"
+            [class.error]="ingresoForm.get('monto')?.invalid && ingresoForm.get('monto')?.touched"
+          />
+          <div class="error-message" *ngIf="ingresoForm.get('monto')?.invalid && ingresoForm.get('monto')?.touched">
+            <span *ngIf="ingresoForm.get('monto')?.errors?.['required']">El monto es requerido</span>
+            <span *ngIf="ingresoForm.get('monto')?.errors?.['min']">El monto debe ser mayor a 0</span>
+          </div>
+        </div>
+
+        <!-- Campo Fecha -->
+        <div class="form-group">
+          <label for="fecha" class="form-label">
+            <i class="material-icons">event</i>
+            Fecha
+          </label>
+          <input
+            type="date"
+            id="fecha"
+            formControlName="fecha"
+            class="form-input"
+            [class.error]="ingresoForm.get('fecha')?.invalid && ingresoForm.get('fecha')?.touched"
+          />
+          <div class="error-message" *ngIf="ingresoForm.get('fecha')?.invalid && ingresoForm.get('fecha')?.touched">
+            <span *ngIf="ingresoForm.get('fecha')?.errors?.['required']">La fecha es requerida</span>
+          </div>
+        </div>
+
+        <!-- Campo Descripción -->
+        <div class="form-group">
+          <label for="descripcion" class="form-label">
+            <i class="material-icons">description</i>
+            Descripción (Opcional)
+          </label>
+          <textarea
+            id="descripcion"
+            formControlName="descripcion"
+            class="form-input"
+            placeholder="Descripción del ingreso..."
+            rows="3"
+          ></textarea>
+        </div>
+
+        <!-- Información adicional -->
+        <div class="ingreso-info">
+          <div class="info-item">
+            <span class="info-label">Creado el:</span>
+            <span class="info-value">{{ ingreso.created_at | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Cartera actual:</span>
+            <span class="info-value">{{ getCarteraNombre(ingreso.cartera_id) }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Categoría actual:</span>
+            <span class="info-value">{{ getCategoriaNombre(ingreso.categoria_id) }}</span>
+          </div>
+        </div>
+
+        <!-- Error General -->
+        <div class="general-error" *ngIf="errorMessage">
+          <i class="material-icons">error</i>
+          {{ errorMessage }}
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" (click)="onDelete()" [disabled]="isLoading">
+            <i class="material-icons">delete</i>
+            Eliminar
+          </button>
+          <div class="footer-right">
+            <button type="button" class="btn btn-cancel" (click)="onCancel()" [disabled]="isLoading">
+              Cancelar
+            </button>
+            <button type="submit" class="btn btn-primary" [disabled]="ingresoForm.invalid || isLoading">
+              <span *ngIf="!isLoading">
+                Actualizar
+              </span>
+              <span *ngIf="isLoading" class="loading-content">
+                <div class="spinner"></div>
+                Actualizando...
+              </span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
