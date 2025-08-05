@@ -1,0 +1,122 @@
+<div class="modal-backdrop" (click)="onBackdropClick($event)">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h2 class="modal-title">
+        <i class="material-icons">trending_down</i>
+        Agregar Gasto
+      </h2>
+      <button class="close-btn" (click)="onCancel()">
+        <i class="material-icons">close</i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <form (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label class="form-label" for="cartera">
+            <i class="material-icons">account_balance_wallet</i>
+            Cartera *
+          </label>
+          <select 
+            id="cartera" 
+            [(ngModel)]="gasto.cartera_id" 
+            name="cartera_id" 
+            required
+            class="form-input">
+            <option value="">Selecciona una cartera</option>
+            <option *ngFor="let cartera of carteras" [value]="cartera.id">
+              {{ cartera.nombre }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="categoria">
+            <i class="material-icons">category</i>
+            Categoría (Opcional)
+          </label>
+          <select 
+            id="categoria" 
+            [(ngModel)]="gasto.categoria_id" 
+            name="categoria_id"
+            class="form-input">
+            <option value="">Sin categoría</option>
+            <option *ngFor="let categoria of categorias" [value]="categoria.id">
+              {{ categoria.nombre }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="monto">
+            <i class="material-icons">attach_money</i>
+            Monto *
+          </label>
+          <input 
+            type="number" 
+            id="monto" 
+            [(ngModel)]="gasto.monto" 
+            name="monto" 
+            required
+            min="0.01"
+            step="0.01"
+            placeholder="0.00"
+            class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="fecha">
+            <i class="material-icons">event</i>
+            Fecha *
+          </label>
+          <input 
+            type="date" 
+            id="fecha" 
+            [(ngModel)]="gasto.fecha" 
+            name="fecha" 
+            required
+            class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="descripcion">
+            <i class="material-icons">description</i>
+            Descripción (Opcional)
+          </label>
+          <textarea 
+            id="descripcion" 
+            [(ngModel)]="gasto.descripcion" 
+            name="descripcion"
+            placeholder="Descripción del gasto (opcional)"
+            rows="3"
+            class="form-input"></textarea>
+        </div>
+
+        <div class="general-error" *ngIf="error">
+          <i class="material-icons">error</i>
+          {{ error }}
+        </div>
+
+        <div class="modal-footer">
+          <div></div>
+          <div class="footer-right">
+            <button type="button" class="btn btn-cancel" (click)="onCancel()" [disabled]="isLoading">
+              <i class="material-icons">cancel</i>
+              Cancelar
+            </button>
+            <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+              <div class="loading-content" *ngIf="isLoading; else normalContent">
+                <span class="spinner"></span>
+                Creando...
+              </div>
+              <ng-template #normalContent>
+                <i class="material-icons">add</i>
+                Crear Gasto
+              </ng-template>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
